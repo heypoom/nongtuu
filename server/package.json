@@ -1,0 +1,44 @@
+{
+  "name": "NTBackend",
+  "version": "0.0.1",
+  "description": "NongTuu's Backend!",
+  "main": "index.js",
+  "author": "Phoomparin Mano",
+  "license": "LGPL-3.0",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.3",
+    "feathers": "^2.1.1",
+    "feathers-authentication": "^0.7.12",
+    "feathers-authentication-jwt": "^0.3.1",
+    "feathers-authentication-local": "^0.3.4",
+    "feathers-authentication-management": "^0.1.6",
+    "feathers-errors": "^2.6.2",
+    "feathers-hooks": "^1.8.1",
+    "feathers-hooks-common": "^2.0.3",
+    "feathers-mongoose": "^5.0.3",
+    "feathers-rest": "^1.7.1",
+    "feathers-socketio": "^1.5.2",
+    "feathers-sync": "^0.1.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.0",
+    "babel-eslint": "^7.2.1",
+    "babel-loader": "^6.4.1",
+    "babel-preset-latest": "^6.24.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "eslint": "^3.18.0",
+    "eslint-plugin-import": "^2.2.0",
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.2",
+    "source-map-support": "^0.4.14",
+    "webpack": "^2.3.2"
+  },
+  "scripts": {
+    "start": "npm-run-all --parallel watch:server watch:build",
+    "watch:build": "webpack --watch",
+    "watch:server": "nodemon \"./build/bundle.js\" --watch \"./build\"",
+    "bundle": "webpack"
+  }
+}
