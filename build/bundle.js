@@ -718,6 +718,10 @@ var initChat = function initChat(id) {
       data: "nomoney"
     }, {
       type: "postback",
+      label: "ได้หมายศาล",
+      data: "lawsuit"
+    }, {
+      type: "postback",
       label: "โดนตำรวจยึดรถ",
       data: "policetookmycar"
     }, {
@@ -738,6 +742,22 @@ var REPLY = {
   "P1": "\u0E16\u0E49\u0E32\u0E40\u0E1B\u0E47\u0E19\u0E2B\u0E21\u0E32\u0E22\u0E40\u0E23\u0E35\u0E22\u0E01\u0E41\u0E25\u0E30\u0E2A\u0E33\u0E40\u0E19\u0E32\u0E04\u0E33\u0E1F\u0E49\u0E2D\u0E07 \u0E2B\u0E23\u0E37\u0E2D \u0E2B\u0E21\u0E32\u0E22\u0E40\u0E23\u0E35\u0E22\u0E01\u0E04\u0E14\u0E35\u0E41\u0E1E\u0E48\u0E07\u0E2A\u0E32\u0E21\u0E31\u0E0D\n\u0E15\u0E48\u0E2D\u0E17\u0E33\u0E01\u0E32\u0E23\u0E04\u0E33\u0E43\u0E2B\u0E49\u0E01\u0E32\u0E23\u0E22\u0E37\u0E48\u0E19\u0E15\u0E48\u0E2D\u0E28\u0E32\u0E25\u0E20\u0E32\u0E22\u0E43\u0E01\u0E33\u0E2B\u0E19\u0E14 15 \u0E27\u0E31\u0E19 \u0E19\u0E31\u0E1A\u0E15\u0E31\u0E49\u0E07\u0E41\u0E15\u0E48\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E2B\u0E21\u0E32\u0E22",
 
   "P2": ["\u0E2B\u0E21\u0E32\u0E22\u0E40\u0E23\u0E35\u0E22\u0E01\u0E04\u0E14\u0E35\u0E44\u0E21\u0E48\u0E21\u0E35\u0E02\u0E49\u0E2D\u0E22\u0E38\u0E48\u0E07\u0E22\u0E32\u0E01 \u0E2B\u0E23\u0E37\u0E2D \u0E2B\u0E21\u0E32\u0E22\u0E40\u0E23\u0E35\u0E22\u0E04\u0E14\u0E35\u0E21\u0E42\u0E19\u0E2A\u0E32\u0E40\u0E2B\u0E23\u0E48", "\u0E04\u0E14\u0E35\u0E21\u0E42\u0E19\u0E2A\u0E32\u0E40\u0E2B\u0E23\u0E48 \u0E04\u0E37\u0E2D \u0E04\u0E14\u0E35\u0E17\u0E35\u0E48\u0E1F\u0E49\u0E2D\u0E07\u0E23\u0E49\u0E2D\u0E07\u0E01\u0E31\u0E19\u0E42\u0E14\u0E22\u0E21\u0E35\u0E17\u0E38\u0E19\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E44\u0E21\u0E48\u0E40\u0E01\u0E34\u0E19 40,000 \u0E1A\u0E32\u0E17", "\u0E40\u0E0A\u0E48\u0E19 \u0E1F\u0E49\u0E2D\u0E07\u0E44\u0E25\u0E48\u0E2D\u0E2D\u0E01\u0E08\u0E32\u0E01\u0E2D\u0E2A\u0E31\u0E07\u0E2B\u0E32\u0E23\u0E34\u0E21\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C \u0E17\u0E35\u0E48\u0E21\u0E35\u0E04\u0E48\u0E32\u0E40\u0E0A\u0E48\u0E32\u0E02\u0E13\u0E30\u0E22\u0E37\u0E48\u0E19\u0E1F\u0E49\u0E2D\u0E07\u0E44\u0E21\u0E48\u0E40\u0E01\u0E34\u0E19\u0E40\u0E14\u0E37\u0E2D\u0E19\u0E25\u0E48\u0E30 4,000", "\u0E08\u0E33\u0E40\u0E25\u0E22\u0E15\u0E49\u0E2D\u0E07\u0E21\u0E32\u0E28\u0E32\u0E25\u0E15\u0E32\u0E21\u0E27\u0E31\u0E19\u0E19\u0E31\u0E14\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E44\u0E01\u0E25\u0E48\u0E40\u0E01\u0E25\u0E35\u0E48\u0E22"]
+};
+
+var gotLawsuit = function gotLawsuit(id) {
+  bot.sendTemplate({
+    title: "คุณได้หมายศาลประเภทแพ่ง หรืออาญาครับ?",
+    text: "เราจะช่วยคุณแน่ๆ ครับ แต่รบกวนตอบคำถามก่อนนะครับ",
+    actions: [{
+      type: "postback",
+      label: "ประเภทคดีแพ่ง",
+      data: "RektP"
+    }, {
+      type: "postback",
+      label: "ประเภทคดีอาญา",
+      data: "RektA"
+    }]
+  }, id);
 };
 
 var e = function e(msg) {
@@ -796,30 +816,18 @@ var WebHookHandler = function WebHookHandler() {
         if (msg.type === "message") {
           var text = msg.message.text;
 
-          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi/g)) {
+          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi/gi)) {
             initChat(id);
-          } else if (e(text.match(/บัตร|ประชา/g))) {
+          } else if (e(text.match(/บัตร|ประชา/gi))) {
             bot.sendText("\u0E40\u0E2D\u0E01\u0E2A\u0E32\u0E23\u0E17\u0E35\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E15\u0E23\u0E35\u0E22\u0E21 \u0E04\u0E37\u0E2D \u0E1A\u0E31\u0E15\u0E23\u0E17\u0E35\u0E48\u0E2A\u0E32\u0E21\u0E32\u0E23\u0E16\u0E43\u0E0A\u0E49\u0E22\u0E37\u0E19\u0E22\u0E31\u0E19\u0E15\u0E31\u0E27\u0E15\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E19\u0E48\u0E27\u0E22\u0E07\u0E32\u0E19\u0E02\u0E2D\u0E07\u0E23\u0E31\u0E10\u0E2D\u0E2D\u0E01\u0E43\u0E2B\u0E49 \u0E2B\u0E23\u0E37\u0E2D\u0E2A\u0E33\u0E40\u0E19\u0E32\u0E17\u0E30\u0E40\u0E1A\u0E35\u0E22\u0E19\u0E1A\u0E49\u0E32\u0E19", id);
             bot.sendImage("https://i.imgur.com/z8C0ESs.jpg", id);
             // initChat(id)
-          } else if (e(text.match(/ทำ|พาสปอร์ต|Passport/g))) {
+          } else if (e(text.match(/ทำ|พาสปอร์ต|Passport/gi))) {
             bot.sendText("\u0E08\u0E2D\u0E07\u0E04\u0E34\u0E27\u0E41\u0E25\u0E30\u0E14\u0E39\u0E27\u0E34\u0E18\u0E35\u0E01\u0E32\u0E23\u0E17\u0E33\u0E1E\u0E32\u0E2A\u0E1B\u0E2D\u0E23\u0E4C\u0E15\u0E17\u0E35\u0E48 https://www.passport.in.th", id);
             bot.sendImage("https://i.imgur.com/VRItpao.jpg", id);
             // initChat(id)
-          } else if (e(text.match(/ได้|โดน|หมายศาล/g))) {
-            bot.sendTemplate({
-              title: "คุณได้หมายศาลประเภทแพ่ง หรืออาญาครับ?",
-              text: "เราจะช่วยคุณแน่ๆ ครับ แต่รบกวนตอบคำถามก่อนนะครับ",
-              actions: [{
-                type: "postback",
-                label: "ประเภทคดีแพ่ง",
-                data: "RektP"
-              }, {
-                type: "postback",
-                label: "ประเภทคดีอาญา",
-                data: "RektA"
-              }]
-            }, id);
+          } else if (e(text.match(/หมายศาล/gi))) {
+            gotLawsuit(id);
           } else if (JOKE_REPLY[text]) {
             bot.sendText(JOKE_REPLY[text]);
           } else {
@@ -831,6 +839,9 @@ var WebHookHandler = function WebHookHandler() {
           var choice = msg.postback.data;
           if (REPLY[choice]) {
             bot.sendText(REPLY[choice], id);
+          }
+          if (choice === "lawsuit") {
+            gotLawsuit();
           }
           if (choice === "RektP") {
             bot.sendTemplate({

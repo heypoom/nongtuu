@@ -106,6 +106,10 @@ const initChat = id => {
       data: "nomoney"
     }, {
       type: "postback",
+      label: "ได้หมายศาล",
+      data: "lawsuit"
+    }, {
+      type: "postback",
       label: "โดนตำรวจยึดรถ",
       data: "policetookmycar"
     }, {
@@ -138,6 +142,22 @@ const REPLY = {
     `เช่น ฟ้องไล่ออกจากอสังหาริมทรัพย์ ที่มีค่าเช่าขณะยื่นฟ้องไม่เกินเดือนล่ะ 4,000`,
     `จำเลยต้องมาศาลตามวันนัดเพื่อไกล่เกลี่ย`
   ]
+}
+
+const gotLawsuit = id => {
+  bot.sendTemplate({
+    title: "คุณได้หมายศาลประเภทแพ่ง หรืออาญาครับ?",
+    text: "เราจะช่วยคุณแน่ๆ ครับ แต่รบกวนตอบคำถามก่อนนะครับ",
+    actions: [{
+      type: "postback",
+      label: "ประเภทคดีแพ่ง",
+      data: "RektP"
+    }, {
+      type: "postback",
+      label: "ประเภทคดีอาญา",
+      data: "RektA"
+    }]
+  }, id)
 }
 
 const e = (msg, m = 1) => {
@@ -193,30 +213,18 @@ class WebHookHandler {
         if (msg.type === "message") {
           const text = msg.message.text
 
-          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi/g)) {
+          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi/gi)) {
             initChat(id)
-          } else if (e(text.match(/บัตร|ประชา/g))) {
+          } else if (e(text.match(/บัตร|ประชา/gi))) {
             bot.sendText(`เอกสารที่ต้องเตรียม คือ บัตรที่สามารถใช้ยืนยันตัวตนที่หน่วยงานของรัฐออกให้ หรือสำเนาทะเบียนบ้าน`, id)
             bot.sendImage(`https://i.imgur.com/z8C0ESs.jpg`, id)
             // initChat(id)
-          } else if (e(text.match(/ทำ|พาสปอร์ต|Passport/g))) {
+          } else if (e(text.match(/ทำ|พาสปอร์ต|Passport/gi))) {
             bot.sendText(`จองคิวและดูวิธีการทำพาสปอร์ตที่ https://www.passport.in.th`, id)
             bot.sendImage(`https://i.imgur.com/VRItpao.jpg`, id)
             // initChat(id)
-          } else if (e(text.match(/ได้|โดน|หมายศาล/g))) {
-            bot.sendTemplate({
-              title: "คุณได้หมายศาลประเภทแพ่ง หรืออาญาครับ?",
-              text: "เราจะช่วยคุณแน่ๆ ครับ แต่รบกวนตอบคำถามก่อนนะครับ",
-              actions: [{
-                type: "postback",
-                label: "ประเภทคดีแพ่ง",
-                data: "RektP"
-              }, {
-                type: "postback",
-                label: "ประเภทคดีอาญา",
-                data: "RektA"
-              }]
-            }, id)
+          } else if (e(text.match(/หมายศาล/gi))) {
+            gotLawsuit(id)
           } else if (JOKE_REPLY[text]) {
             bot.sendText(JOKE_REPLY[text])
           } else {
@@ -228,6 +236,9 @@ class WebHookHandler {
           const choice = msg.postback.data
           if (REPLY[choice]) {
             bot.sendText(REPLY[choice], id)
+          }
+          if (choice === "lawsuit") {
+            gotLawsuit()
           }
           if (choice === "RektP") {
             bot.sendTemplate({
