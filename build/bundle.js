@@ -826,7 +826,7 @@ var WebHookHandler = function WebHookHandler() {
             bot.sendText("\u0E08\u0E2D\u0E07\u0E04\u0E34\u0E27\u0E41\u0E25\u0E30\u0E14\u0E39\u0E27\u0E34\u0E18\u0E35\u0E01\u0E32\u0E23\u0E17\u0E33\u0E1E\u0E32\u0E2A\u0E1B\u0E2D\u0E23\u0E4C\u0E15\u0E17\u0E35\u0E48 https://www.passport.in.th", id);
             bot.sendImage("https://i.imgur.com/VRItpao.jpg", id);
             // initChat(id)
-          } else if (e(text.match(/หมายศาล/gi))) {
+          } else if (text.match(/หมายศาล/gi)) {
             gotLawsuit(id);
           } else if (JOKE_REPLY[text]) {
             bot.sendText(JOKE_REPLY[text]);

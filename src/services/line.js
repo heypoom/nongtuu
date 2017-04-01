@@ -223,7 +223,7 @@ class WebHookHandler {
             bot.sendText(`จองคิวและดูวิธีการทำพาสปอร์ตที่ https://www.passport.in.th`, id)
             bot.sendImage(`https://i.imgur.com/VRItpao.jpg`, id)
             // initChat(id)
-          } else if (e(text.match(/หมายศาล/gi))) {
+          } else if (text.match(/หมายศาล/gi)) {
             gotLawsuit(id)
           } else if (JOKE_REPLY[text]) {
             bot.sendText(JOKE_REPLY[text])
