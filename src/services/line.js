@@ -52,7 +52,10 @@ class LineMessaging {
     }, reply)
   }
 
-  sendTemplate({title, text, alt = "This is an alt text", thumbnail = defaultImage, actions = defaultAction, reply}) {
+  sendTemplate({
+    title, text, alt = "This is an alt text", thumbnail = defaultImage,
+    actions = defaultAction, reply
+  }) {
     this.sendMessage({
       type: "template",
       altText: alt,
@@ -100,7 +103,7 @@ class LineService {
 }
 
 class WebHookHandler {
-  find = () => Promise.resolve({data: "OK"})
+  find = () => Promise.resolve({data: "OK v2"})
 
   create = (data = {}) => {
     console.log("Incoming POST request:", data)
@@ -140,7 +143,7 @@ class WebHookHandler {
       })
     }
 
-    return Promise.resolve({data: "OK v1"})
+    return Promise.resolve({data: "OK v2"})
   }
 }
 

@@ -725,7 +725,7 @@ var WebHookHandler = function WebHookHandler() {
   _classCallCheck(this, WebHookHandler);
 
   this.find = function () {
-    return Promise.resolve({ data: "OK" });
+    return Promise.resolve({ data: "OK v2" });
   };
 
   this.create = function () {
@@ -768,7 +768,7 @@ var WebHookHandler = function WebHookHandler() {
       });
     }
 
-    return Promise.resolve({ data: "OK v1" });
+    return Promise.resolve({ data: "OK v2" });
   };
 };
 
