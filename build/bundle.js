@@ -722,7 +722,7 @@ var WebHookHandler = function WebHookHandler() {
   _classCallCheck(this, WebHookHandler);
 
   this.find = function () {
-    return Promise.resolve({ data: "OK v2" });
+    return Promise.resolve({ data: "OK v3" });
   };
 
   this.create = function () {
@@ -763,14 +763,22 @@ var WebHookHandler = function WebHookHandler() {
         }
 
         if (msg.type === "postback") {
-          if (data === "nomoney") {
+          if (msg.postback.data === "nomoney") {
             bot.sendText("Y u so poor lolz", msg.source.userId);
+          }
+
+          if (msg.postback.data === "policetookmycar") {
+            bot.sendText("Good for u", msg.source.userId);
+          }
+
+          if (msg.postback.data === "parparazzis") {
+            bot.sendText("Git Gud with da Cameraz", msg.source.userId);
           }
         }
       });
     }
 
-    return Promise.resolve({ data: "OK v2" });
+    return Promise.resolve({ data: "200" });
   };
 };
 

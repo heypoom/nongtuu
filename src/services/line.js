@@ -99,7 +99,7 @@ class LineService {
 }
 
 class WebHookHandler {
-  find = () => Promise.resolve({data: "OK v2"})
+  find = () => Promise.resolve({data: "OK v3"})
 
   create = (data = {}) => {
     console.log("Incoming POST request:", data)
@@ -137,14 +137,22 @@ class WebHookHandler {
         }
 
         if (msg.type === "postback") {
-          if (data === "nomoney") {
+          if (msg.postback.data === "nomoney") {
             bot.sendText("Y u so poor lolz", msg.source.userId)
+          }
+
+          if (msg.postback.data === "policetookmycar") {
+            bot.sendText("Good for u", msg.source.userId)
+          }
+
+          if (msg.postback.data === "parparazzis") {
+            bot.sendText("Git Gud with da Cameraz", msg.source.userId)
           }
         }
       })
     }
 
-    return Promise.resolve({data: "OK v2"})
+    return Promise.resolve({data: "200"})
   }
 }
 
