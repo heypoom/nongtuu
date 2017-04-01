@@ -92,5 +92,5 @@ class LineService {
 
 export default function debug() {
   this.use("line", new LineService())
-  this.use("linehook", new WebHookHandler())
+  // this.use("linehook", new WebHookHandler())
 }
