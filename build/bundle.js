@@ -711,6 +711,7 @@ var WebHookHandler = function WebHookHandler() {
 
   this.create = function (data) {
     console.log("Incoming POST request:", data);
+    bot.sendText("Incoming Msg: " + JSON.stringify(data));
     return Promise.resolve({ data: "OK" });
   };
 };
