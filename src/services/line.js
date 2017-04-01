@@ -58,7 +58,7 @@ class LineMessaging {
     })
   }
 
-  sendTemplate(title, text, alt = "This is an alt text", thumbnail = defaultImage, action = defaultAction) {
+  sendTemplate(title, text, alt = "This is an alt text", thumbnail = defaultImage, actions = defaultAction) {
     this.sendMessage({
       type: "template",
       altText: alt,
@@ -72,6 +72,10 @@ class LineMessaging {
     })
   }
 
+}
+
+const scripts = {
+  "main": {}
 }
 
 class ChatStage extends MemoryService {
@@ -111,9 +115,26 @@ class WebHookHandler {
     if (data.events) {
       data.events.forEach(msg => {
         if (msg.type === "message") {
-          if (msg.message.text === "Hello") {
-            bot.sendText("Hello~~~")
-            bot.sendTemplate("หัวข้อ", "ข้อมูล", "ข้อความ")
+          if (msg.message.text.indexOf("สวัสดี") > -1) {
+            bot.sendText("Hello World")
+            bot.sendTemplate("สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
+              "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
+              "Alt Message",
+              "https://i.imgur.com/s4c7YSH.jpg",
+              [{
+                type: "postback",
+                label: "หนี้บัตรเครดิต",
+                data: "action=nomoney"
+              }, {
+                type: "postback",
+                label: "โดนตำรวจยึดรถ",
+                data: "action=policetookmycar"
+              }, {
+                type: "postback",
+                label: "ถูกแอบถ่ายลงโซเชียล",
+                data: "action=paparazzis"
+              }]
+            )
           }
 
           if (msg.message.text === "HelloReply") {

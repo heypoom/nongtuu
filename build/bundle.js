@@ -655,7 +655,7 @@ var LineMessaging = function () {
     value: function sendTemplate(title, text) {
       var alt = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "This is an alt text";
       var thumbnail = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : defaultImage;
-      var action = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultAction;
+      var actions = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultAction;
 
       this.sendMessage({
         type: "template",
@@ -673,6 +673,10 @@ var LineMessaging = function () {
 
   return LineMessaging;
 }();
+
+var scripts = {
+  "main": {}
+};
 
 var ChatStage = function (_MemoryService) {
   _inherits(ChatStage, _MemoryService);
@@ -734,9 +738,21 @@ var WebHookHandler = function WebHookHandler() {
     if (data.events) {
       data.events.forEach(function (msg) {
         if (msg.type === "message") {
-          if (msg.message.text === "Hello") {
-            bot.sendText("Hello~~~");
-            bot.sendTemplate("หัวข้อ", "ข้อมูล", "ข้อความ");
+          if (msg.message.text.indexOf("สวัสดี") > -1) {
+            bot.sendText("Hello World");
+            bot.sendTemplate("สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?", "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ", "Alt Message", "https://i.imgur.com/s4c7YSH.jpg", [{
+              type: "postback",
+              label: "หนี้บัตรเครดิต",
+              data: "action=nomoney"
+            }, {
+              type: "postback",
+              label: "โดนตำรวจยึดรถ",
+              data: "action=policetookmycar"
+            }, {
+              type: "postback",
+              label: "ถูกแอบถ่ายลงโซเชียล",
+              data: "action=paparazzis"
+            }]);
           }
 
           if (msg.message.text === "HelloReply") {
