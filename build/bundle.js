@@ -583,8 +583,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 // API "Secrets". Feel free to steal them. I don't give a single F.
 // TODO: Move that to Environment Variables, but I ain't got no time
 
-var CHANNEL_ID = "1508478196";
-var CHANNEL_SECRET = "ffe7d065e984a1094792d689bd2fd0e0";
 var CHANNEL_TOKEN = "UuQd6RmSRQppG/0g6xc4Xh9GVigTR0/CqBV7afFJpYbRoMp0TGP00T1UNbEZmeDgM5VMEYF+ucWkGJwHwVoQP0cGzhAeg0RCToj8c2Pk2qCZI1/wkh6tTWlOtt9uFIMwKiqj5N/3bTCjfII3HQki3QdB04t89/1O/w1cDnyilFU=";
 var TEST_USER_ID = "U33084216cc1a00f7aa27632bec769356";
 
@@ -592,16 +590,61 @@ var TEST_USER_ID = "U33084216cc1a00f7aa27632bec769356";
 // NOTE: Why the heck are the Official SDKs deprecated? Like, seriously dude? -.-
 
 var LineMessaging = function () {
-  function LineMessaging(id, secret) {
+  function LineMessaging(token) {
     _classCallCheck(this, LineMessaging);
 
-    this._id = id;
-    this._secret = secret;
+    this.token = token;
   }
 
   _createClass(LineMessaging, [{
+    key: "post",
+    value: function post(endpoint, body) {
+      (0, _requestPromiseNative2.default)({
+        method: "POST",
+        uri: "https://api.line.me/v2/bot/" + endpoint,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      }).auth(null, null, true, this.token);
+    }
+  }, {
     key: "sendMessage",
-    value: function sendMessage() {}
+    value: function sendMessage(message) {
+      this.post("message/push", {
+        to: TEST_USER_ID,
+        messages: [message]
+      });
+    }
+  }, {
+    key: "sendText",
+    value: function sendText(message) {
+      this.sendMessage({
+        type: "text",
+        text: "" + message
+      });
+    }
+  }, {
+    key: "sendTemplate",
+    value: function sendTemplate(title, text) {
+      this.sendMessage({
+        type: "template",
+        altText: "this is a buttons template",
+        template: {
+          type: "buttons",
+          thumbnailImageUrl: "https://images.unsplash.com/reserve/uvRBqDAfQfaGPJiI6lVS_R0001899.jpg?dpr=1&auto=format&fit=crop&w=1500&h=994&q=80&cs=tinysrgb&crop=",
+          title: title,
+          text: text,
+          actions: [{
+            type: "postback",
+            label: "หนี้บัตรเครดิต",
+            data: "action=buy&itemid=123"
+          }, {
+            type: "postback",
+            label: "กฎหมายที่ดิน",
+            data: "action=add&itemid=123"
+          }]
+        }
+      });
+    }
   }]);
 
   return LineMessaging;
@@ -611,7 +654,7 @@ var ChatStage = function ChatStage() {
   _classCallCheck(this, ChatStage);
 };
 
-var bot = new LineMessaging(CHANNEL_ID, CHANNEL_SECRET);
+var bot = new LineMessaging(CHANNEL_TOKEN);
 
 var LineService = function () {
   function LineService() {
@@ -624,20 +667,8 @@ var LineService = function () {
     };
 
     this.get = function (message) {
-      (0, _requestPromiseNative2.default)({
-        method: "POST",
-        uri: "https://api.line.me/v2/bot/message/push",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: TEST_USER_ID,
-          messages: [{
-            type: "text",
-            text: "[ECHO] " + message
-          }]
-        })
-      }, function (err, msg) {
-        console.log(err);
-      }).auth(null, null, true, CHANNEL_TOKEN);
+      // bot.sendTemplate(message, "Please Select an option...")
+      bot.sendTemplate("\u0E2A\u0E27\u0E31\u0E2A\u0E14\u0E35\u0E04\u0E48\u0E30 \u0E21\u0E35\u0E2D\u0E30\u0E44\u0E23\u0E08\u0E30\u0E43\u0E2B\u0E49\u0E1B\u0E23\u0E36\u0E01\u0E29\u0E32\u0E21\u0E31\u0E49\u0E22\u0E04\u0E30", "...");
       return Promise.resolve({ data: "200 OK", time: new Date().toLocaleString() });
     };
   }
@@ -655,8 +686,22 @@ var LineService = function () {
   return LineService;
 }();
 
+var WebHookHandler = function WebHookHandler() {
+  _classCallCheck(this, WebHookHandler);
+
+  this.find = function () {
+    return Promise.resolve({ data: "OK" });
+  };
+
+  this.create = function (data) {
+    console.log("Incoming POST request:", data);
+    return Promise.resolve({ data: "OK" });
+  };
+};
+
 function debug() {
   this.use("line", new LineService());
+  this.use("linehook", new WebHookHandler());
 }
 
 /***/ }),
