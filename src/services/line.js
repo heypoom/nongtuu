@@ -25,7 +25,8 @@ class LineMessaging {
 }
 
 class ChatStage {
-  // TODO: We need to store user's stage in there. I'm thinking of Redis, but fuck it I'm tired.
+  // TODO: We need to store user's state in there.
+  //       I'm thinking of Redis, but fuck it I'm tired.
   //       It's a hackathon, so yeah.
 }
 
