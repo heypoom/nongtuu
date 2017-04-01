@@ -42,10 +42,17 @@ class LineMessaging {
   }
 
   sendText(message, to) {
-    this.sendMessage({
-      type: "text",
-      text: `${message}`
-    }, to)
+    if (Array.isArray(message)) {
+      this.post("message/push", {
+        to,
+        messages: message.map(text => ({type: "text", text}))
+      })
+    } else {
+      this.sendMessage({
+        type: "text",
+        text: `${message}`
+      }, to)
+    }
   }
 
   sendTemplate({
@@ -73,25 +80,6 @@ const scripts = {
 
 const bot = new LineMessaging(CHANNEL_TOKEN)
 
-class LineService {
-
-  setup(app) {
-    this.app = app
-  }
-
-  find = () => Promise.resolve({
-    data: "LINE Integration Service is Ready!"
-  })
-
-  get = message => {
-    // bot.sendTemplate(message, "Please Select an option...")
-    bot.sendTemplate(`สวัสดีค่ะ มีอะไรจะให้ปรึกษามั้ยคะ`, `...`)
-    return Promise.resolve({data: "200 OK", time: new Date().toLocaleString()})
-  }
-
-  // get = () => Promise.resolve({data: "Hello World"})
-}
-
 class ChatStage extends MemoryService {
   // TODO: We need to store user's state in there.
   //       I'm thinking of Redis, but fuck it I'm tired.
@@ -99,10 +87,9 @@ class ChatStage extends MemoryService {
 }
 
 const initChat = id => {
-  bot.sendText("Hello World", id)
   bot.sendTemplate({
-    title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
-    text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
+    title: "สวัสดีครับ มีอะไรให้ปรึกษาไหมคะ?",
+    text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีครับ",
     alt: "Alt Message",
     thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
     actions: [{
@@ -121,20 +108,17 @@ const initChat = id => {
   }, id)
 }
 
-const C1_R1 = `1.ไปตามศาลนัด
-2.คุยกับทนายของธนาคารเจ้าของบัตร เพื่อดูข้อเสนอของธนาคาร
-3.ถ้าไม่ไหว ลองต่อรองเพื่อเลื่อนวันชำระ
-4.หลังจากนั้นทางศาลจะให้เซ็นสัญญาเลื่อนวันนัดคดี แล้วกลับบ้านได้!`
+const C1 = [`ใจเย็นๆ ไปตามศาลนัด คุยกับทนายของธนาคารเจ้าของบัตร เพื่อดูข้อเสนอของธนาคารก่อนนะ`,
+`ถ้าเราไม่ไหว ลองต่อรองเพื่อเลื่อนวันจ่ายเงิน หลังจากนั้นทางศาลจะให้เซ็นสัญญาเลื่อนวันนัดคดี แล้วกลับบ้านได้เลย!`,
+`แต่ถ้าเราไหว เตรียมเอกสารแสดงรายได้ แล้วก็ตกลงกับธนาคารเพื่อผ่อนชำระตามรายได้ที่มี แค่นั้นเอง~`,
+`ถ้าทางธนาคารเค้ารับได้ก็เสร็จสิ้น แต่ถ้าไม่ก็ต้องยอมทำตามคำตัดสินของศาลล่ะนะ...`]
 
-const C1_R2 = `1.เตรียมเอกสารแสดงรายได้
-2.ตกลงกับธนาคารเพื่อผ่อนชำระตามรายได้
-3.ถ้าทางธนาคารรับได้ก็เสร็จสิ้น แต่ถ้าไม่ก็ทำตามคำตัดสินของศาล`
+const C2 = [
+  `ถ้ารถเรายังผ่อนไม่หมด ก็ไปติดต่อไฟแนนซ์ให้เค้าทำเรื่องเพื่อขอคืน`,
+  `แต่ถ้าเราผ่อนหมดแล้ว ก็ไปยื่นคำร้องต่อศาลภายใน 1 ปี ไม่อย่างนั้นจะขึ้นว่าสูญหายนะ`
+]
 
-const C2 = `1.ถ้ารถยังผ่อนไม่หมด ติดต่อไฟแนนซ์ ให้ทำเรื่องเพื่อขอคืน
-2.แต่ถ้าผ่อนหมดแล้ว ให้ปยื่นคำร้องต่อศาลภายใน 1 ปี ไม่เช่นนั้นจะขึ้นว่าสูญหาย`
-
-const C3 = `1. รวบรวมหลักฐานที่ชัดเจน
-2.เข้าแจ้งความกับตำรวจ`
+const C3 = `ใจเย็นๆ ก่อน รีบรวบรวมหลักฐานที่ชัดเจน แล้วไปเข้าแจ้งความกับตำรวจนะ`
 
 class WebHookHandler {
   find = () => Promise.resolve({data: "OK v3"})
@@ -147,7 +131,7 @@ class WebHookHandler {
     if (data.events) {
       data.events.forEach(msg => {
         if (msg.type === "message") {
-          if (msg.message.text.indexOf("สวัสดี") > -1) {
+          if (msg.message.text.match(/สวัสดี|หวัดดี/)) {
             initChat(msg.source.userId)
           }
 
@@ -158,9 +142,7 @@ class WebHookHandler {
 
         if (msg.type === "postback") {
           if (msg.postback.data === "nomoney") {
-            bot.sendText(C1_R1, msg.source.userId)
-
-            bot.sendText(C1_R2, msg.source.userId)
+            bot.sendText(C1, msg.source.userId)
           }
 
           if (msg.postback.data === "policetookmycar") {
@@ -179,7 +161,6 @@ class WebHookHandler {
 }
 
 export default function debug() {
-  this.use("line", new LineService())
   this.use("linehook", new WebHookHandler(), (req, res, next) => {
     res.status(200)
     next()
