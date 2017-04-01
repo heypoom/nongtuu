@@ -130,28 +130,42 @@ class WebHookHandler {
 
     if (data.events) {
       data.events.forEach(msg => {
+        const id = msg.source.userId
+
         if (msg.type === "message") {
-          if (msg.message.text.match(/สวัสดี|หวัดดี/)) {
-            initChat(msg.source.userId)
+          const text = msg.message.text
+
+          if (text.match(/สวัสดี|หวัดดี/g)) {
+            initChat(id)
           }
 
-          if (msg.message.text === "HelloReply") {
-            bot.sendText("Hello Man", msg.source.userId)
+          if (text.match(/บัตร|หาย/g).length > 1) {
+            bot.sendText(`เอกสารที่ต้องเตรียม คือ บัตรที่สามารถใช้ยืนยันตัวตนที่หน่วยงานของรัฐออกให้ หรือสำเนาทะเบียนบ้าน`, id)
+          }
+
+          if (text.match(/ทำ|พาสปอร์ต|Passport/g).length > 1) {
+            bot.sendText(`จองคิวและดูวิธีการทำพาสสปอร์ตที่ https://www.passport.in.th`, id)
+          }
+
+          if (text.match(/ได้|หมายศาล/g).length > 1) {
+            bot.sendText(`เราจะช่วยคุณแน่ๆ ครับ คุณได้หมายศาลประเภทอะไรครับ`)
           }
         }
 
         if (msg.type === "postback") {
           if (msg.postback.data === "nomoney") {
-            bot.sendText(C1, msg.source.userId)
+            bot.sendText(C1, id)
           }
 
           if (msg.postback.data === "policetookmycar") {
-            bot.sendText(C2, msg.source.userId)
+            bot.sendText(C2, id)
           }
 
           if (msg.postback.data === "paparazzis") {
-            bot.sendText(C3, msg.source.userId)
+            bot.sendText(C3, id)
           }
+
+          initChat(id)
         }
       })
     }
