@@ -167,11 +167,6 @@ function services() {
   this.configure(_debug2.default);
   this.configure(_line2.default);
   this.configure(_graphql2.default);
-
-  this.use("linehook", function (req, res) {
-    console.log(req);
-    res.send("WebHook Handler");
-  });
 }
 
 /***/ }),
@@ -707,9 +702,25 @@ var LineService = function () {
   return LineService;
 }();
 
+var WebHookHandler = function WebHookHandler() {
+  _classCallCheck(this, WebHookHandler);
+
+  this.find = function () {
+    return Promise.resolve({ data: "OK" });
+  };
+
+  this.create = function (data) {
+    console.log("Incoming POST request:", data);
+    return Promise.resolve({ data: "OK" });
+  };
+};
+
 function debug() {
   this.use("line", new LineService());
-  // this.use("linehook", new WebHookHandler())
+  this.use("linehook", new WebHookHandler(), function (req, res, next) {
+    res.status(200);
+    next();
+  });
 }
 
 /***/ }),

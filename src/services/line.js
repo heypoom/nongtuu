@@ -90,7 +90,19 @@ class LineService {
   // get = () => Promise.resolve({data: "Hello World"})
 }
 
+class WebHookHandler {
+  find = () => Promise.resolve({data: "OK"})
+
+  create = data => {
+    console.log("Incoming POST request:", data)
+    return Promise.resolve({data: "OK"})
+  }
+}
+
 export default function debug() {
   this.use("line", new LineService())
-  // this.use("linehook", new WebHookHandler())
+  this.use("linehook", new WebHookHandler(), (req, res, next) => {
+    res.status(200)
+    next()
+  })
 }
