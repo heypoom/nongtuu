@@ -120,6 +120,15 @@ const C2 = [
 
 const C3 = `ใจเย็นๆ ก่อน รีบรวบรวมหลักฐานที่ชัดเจน แล้วไปเข้าแจ้งความกับตำรวจนะ`
 
+const e = msg => {
+  if (msg.length) {
+    if (msg.length > 1) {
+      return true
+    }
+  }
+  return false
+}
+
 class WebHookHandler {
   find = () => Promise.resolve({data: "OK v3"})
 
@@ -139,15 +148,15 @@ class WebHookHandler {
             initChat(id)
           }
 
-          if (text.match(/บัตร|หาย/g).length > 1) {
+          if (e(text.match(/บัตร|หาย/g))) {
             bot.sendText(`เอกสารที่ต้องเตรียม คือ บัตรที่สามารถใช้ยืนยันตัวตนที่หน่วยงานของรัฐออกให้ หรือสำเนาทะเบียนบ้าน`, id)
           }
 
-          if (text.match(/ทำ|พาสปอร์ต|Passport/g).length > 1) {
+          if (e(text.match(/ทำ|พาสปอร์ต|Passport/g))) {
             bot.sendText(`จองคิวและดูวิธีการทำพาสสปอร์ตที่ https://www.passport.in.th`, id)
           }
 
-          if (text.match(/ได้|หมายศาล/g).length > 1) {
+          if (e(text.match(/ได้|หมายศาล/g))) {
             bot.sendText(`เราจะช่วยคุณแน่ๆ ครับ คุณได้หมายศาลประเภทอะไรครับ`)
           }
         }
