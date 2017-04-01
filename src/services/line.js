@@ -37,18 +37,12 @@ class LineMessaging {
     }).auth(null, null, true, this.token)
   }
 
-  sendMessage(message) {
-    this.post("message/push", {
-      to: TEST_USER_ID,
-      messages: [message]
-    })
-  }
-
-  reply(message, to) {
-    this.post("message/reply", {
-      replyToken: to,
-      messages: [message]
-    })
+  sendMessage(message, reply) {
+    if (reply) {
+      this.post("message/reply", {replyToken: reply, messages: [message]})
+    } else {
+      this.post("message/push", {to: TEST_USER_ID, messages: [message]})
+    }
   }
 
   sendText(message) {
@@ -58,7 +52,7 @@ class LineMessaging {
     })
   }
 
-  sendTemplate(title, text, alt = "This is an alt text", thumbnail = defaultImage, actions = defaultAction) {
+  sendTemplate({title, text, alt = "This is an alt text", thumbnail = defaultImage, actions = defaultAction, reply}) {
     this.sendMessage({
       type: "template",
       altText: alt,
@@ -68,8 +62,8 @@ class LineMessaging {
         title,
         text,
         actions
-      }
-    })
+      },
+    }, reply)
   }
 
 }
@@ -116,12 +110,13 @@ class WebHookHandler {
       data.events.forEach(msg => {
         if (msg.type === "message") {
           if (msg.message.text.indexOf("สวัสดี") > -1) {
-            bot.sendText("Hello World")
-            bot.sendTemplate("สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
-              "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
-              "Alt Message",
-              "https://i.imgur.com/s4c7YSH.jpg",
-              [{
+            bot.sendMessage("Hello World", msg.message.replyToken)
+            bot.sendTemplate({
+              title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
+              text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
+              alt: "Alt Message",
+              thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
+              action: [{
                 type: "postback",
                 label: "หนี้บัตรเครดิต",
                 data: "action=nomoney"
@@ -133,12 +128,13 @@ class WebHookHandler {
                 type: "postback",
                 label: "ถูกแอบถ่ายลงโซเชียล",
                 data: "action=paparazzis"
-              }]
-            )
+              }],
+              reply: msg.message.replyToken
+            })
           }
 
           if (msg.message.text === "HelloReply") {
-            bot.reply({type: "text", text: "Hello Man!"}, msg.message.replyToken)
+            bot.sendMessage({type: "text", text: "Hello Man!"}, msg.message.replyToken)
           }
         }
       })

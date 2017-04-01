@@ -628,19 +628,12 @@ var LineMessaging = function () {
     }
   }, {
     key: "sendMessage",
-    value: function sendMessage(message) {
-      this.post("message/push", {
-        to: TEST_USER_ID,
-        messages: [message]
-      });
-    }
-  }, {
-    key: "reply",
-    value: function reply(message, to) {
-      this.post("message/reply", {
-        replyToken: to,
-        messages: [message]
-      });
+    value: function sendMessage(message, reply) {
+      if (reply) {
+        this.post("message/reply", { replyToken: reply, messages: [message] });
+      } else {
+        this.post("message/push", { to: TEST_USER_ID, messages: [message] });
+      }
     }
   }, {
     key: "sendText",
@@ -652,10 +645,16 @@ var LineMessaging = function () {
     }
   }, {
     key: "sendTemplate",
-    value: function sendTemplate(title, text) {
-      var alt = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "This is an alt text";
-      var thumbnail = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : defaultImage;
-      var actions = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultAction;
+    value: function sendTemplate(_ref) {
+      var title = _ref.title,
+          text = _ref.text,
+          _ref$alt = _ref.alt,
+          alt = _ref$alt === undefined ? "This is an alt text" : _ref$alt,
+          _ref$thumbnail = _ref.thumbnail,
+          thumbnail = _ref$thumbnail === undefined ? defaultImage : _ref$thumbnail,
+          _ref$actions = _ref.actions,
+          actions = _ref$actions === undefined ? defaultAction : _ref$actions,
+          reply = _ref.reply;
 
       this.sendMessage({
         type: "template",
@@ -667,7 +666,7 @@ var LineMessaging = function () {
           text: text,
           actions: actions
         }
-      });
+      }, reply);
     }
   }]);
 
@@ -739,24 +738,31 @@ var WebHookHandler = function WebHookHandler() {
       data.events.forEach(function (msg) {
         if (msg.type === "message") {
           if (msg.message.text.indexOf("สวัสดี") > -1) {
-            bot.sendText("Hello World");
-            bot.sendTemplate("สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?", "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ", "Alt Message", "https://i.imgur.com/s4c7YSH.jpg", [{
-              type: "postback",
-              label: "หนี้บัตรเครดิต",
-              data: "action=nomoney"
-            }, {
-              type: "postback",
-              label: "โดนตำรวจยึดรถ",
-              data: "action=policetookmycar"
-            }, {
-              type: "postback",
-              label: "ถูกแอบถ่ายลงโซเชียล",
-              data: "action=paparazzis"
-            }]);
+            bot.sendMessage("Hello World", msg.message.replyToken);
+            bot.sendTemplate({
+              title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
+              text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
+              alt: "Alt Message",
+              thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
+              action: [{
+                type: "postback",
+                label: "หนี้บัตรเครดิต",
+                data: "action=nomoney"
+              }, {
+                type: "postback",
+                label: "โดนตำรวจยึดรถ",
+                data: "action=policetookmycar"
+              }, {
+                type: "postback",
+                label: "ถูกแอบถ่ายลงโซเชียล",
+                data: "action=paparazzis"
+              }],
+              reply: msg.message.replyToken
+            });
           }
 
           if (msg.message.text === "HelloReply") {
-            bot.reply({ type: "text", text: "Hello Man!" }, msg.message.replyToken);
+            bot.sendMessage({ type: "text", text: "Hello Man!" }, msg.message.replyToken);
           }
         }
       });
