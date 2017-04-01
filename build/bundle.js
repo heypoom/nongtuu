@@ -628,24 +628,22 @@ var LineMessaging = function () {
     }
   }, {
     key: "sendMessage",
-    value: function sendMessage(message, reply) {
-      if (reply) {
-        this.post("message/reply", { replyToken: reply, messages: [message] });
-      } else {
-        this.post("message/push", { to: TEST_USER_ID, messages: [message] });
-      }
+    value: function sendMessage(message) {
+      var to = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : TEST_USER_ID;
+
+      this.post("message/push", { to: to, messages: [message] });
     }
   }, {
     key: "sendText",
-    value: function sendText(message, reply) {
+    value: function sendText(message, to) {
       this.sendMessage({
         type: "text",
         text: "" + message
-      }, reply);
+      }, to);
     }
   }, {
     key: "sendTemplate",
-    value: function sendTemplate(_ref) {
+    value: function sendTemplate(_ref, to) {
       var title = _ref.title,
           text = _ref.text,
           _ref$alt = _ref.alt,
@@ -653,8 +651,7 @@ var LineMessaging = function () {
           _ref$thumbnail = _ref.thumbnail,
           thumbnail = _ref$thumbnail === undefined ? defaultImage : _ref$thumbnail,
           _ref$actions = _ref.actions,
-          actions = _ref$actions === undefined ? defaultAction : _ref$actions,
-          reply = _ref.reply;
+          actions = _ref$actions === undefined ? defaultAction : _ref$actions;
 
       this.sendMessage({
         type: "template",
@@ -666,7 +663,7 @@ var LineMessaging = function () {
           text: text,
           actions: actions
         }
-      }, reply);
+      }, to);
     }
   }]);
 
@@ -738,7 +735,7 @@ var WebHookHandler = function WebHookHandler() {
       data.events.forEach(function (msg) {
         if (msg.type === "message") {
           if (msg.message.text.indexOf("สวัสดี") > -1) {
-            bot.sendText("Hello World", msg.replyToken);
+            bot.sendText("Hello World", msg.source.userId);
             bot.sendTemplate({
               title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
               text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
@@ -747,22 +744,27 @@ var WebHookHandler = function WebHookHandler() {
               actions: [{
                 type: "postback",
                 label: "หนี้บัตรเครดิต",
-                data: "action=nomoney"
+                data: "nomoney"
               }, {
                 type: "postback",
                 label: "โดนตำรวจยึดรถ",
-                data: "action=policetookmycar"
+                data: "policetookmycar"
               }, {
                 type: "postback",
                 label: "ถูกแอบถ่ายลงโซเชียล",
-                data: "action=paparazzis"
-              }],
-              reply: msg.replyToken
-            });
+                data: "paparazzis"
+              }]
+            }, msg.source.userId);
           }
 
           if (msg.message.text === "HelloReply") {
-            bot.sendMessage({ type: "text", text: "Hello Man!" }, msg.replyToken);
+            bot.sendText("Hello Man", msg.source.userId);
+          }
+        }
+
+        if (msg.type === "postback") {
+          if (data === "nomoney") {
+            bot.sendText("Y u so poor lolz", msg.source.userId);
           }
         }
       });

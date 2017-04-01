@@ -37,25 +37,21 @@ class LineMessaging {
     }).auth(null, null, true, this.token)
   }
 
-  sendMessage(message, reply) {
-    if (reply) {
-      this.post("message/reply", {replyToken: reply, messages: [message]})
-    } else {
-      this.post("message/push", {to: TEST_USER_ID, messages: [message]})
-    }
+  sendMessage(message, to = TEST_USER_ID) {
+    this.post("message/push", {to, messages: [message]})
   }
 
-  sendText(message, reply) {
+  sendText(message, to) {
     this.sendMessage({
       type: "text",
       text: `${message}`
-    }, reply)
+    }, to)
   }
 
   sendTemplate({
     title, text, alt = "This is an alt text", thumbnail = defaultImage,
-    actions = defaultAction, reply
-  }) {
+    actions = defaultAction
+  }, to) {
     this.sendMessage({
       type: "template",
       altText: alt,
@@ -66,7 +62,7 @@ class LineMessaging {
         text,
         actions
       },
-    }, reply)
+    }, to)
   }
 
 }
@@ -113,7 +109,7 @@ class WebHookHandler {
       data.events.forEach(msg => {
         if (msg.type === "message") {
           if (msg.message.text.indexOf("สวัสดี") > -1) {
-            bot.sendText("Hello World", msg.replyToken)
+            bot.sendText("Hello World", msg.source.userId)
             bot.sendTemplate({
               title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
               text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
@@ -122,22 +118,27 @@ class WebHookHandler {
               actions: [{
                 type: "postback",
                 label: "หนี้บัตรเครดิต",
-                data: "action=nomoney"
+                data: "nomoney"
               }, {
                 type: "postback",
                 label: "โดนตำรวจยึดรถ",
-                data: "action=policetookmycar"
+                data: "policetookmycar"
               }, {
                 type: "postback",
                 label: "ถูกแอบถ่ายลงโซเชียล",
-                data: "action=paparazzis"
-              }],
-              reply: msg.replyToken
-            })
+                data: "paparazzis"
+              }]
+            }, msg.source.userId)
           }
 
           if (msg.message.text === "HelloReply") {
-            bot.sendMessage({type: "text", text: "Hello Man!"}, msg.replyToken)
+            bot.sendText("Hello Man", msg.source.userId)
+          }
+        }
+
+        if (msg.type === "postback") {
+          if (data === "nomoney") {
+            bot.sendText("Y u so poor lolz", msg.source.userId)
           }
         }
       })
