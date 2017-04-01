@@ -241,8 +241,14 @@ class WebHookHandler {
               `เจ้าของที่ดินมีสิทธิติดตามและเอาคืนที่ดินจากเพื่อนบ้านที่รุกล้ำเข้ามาโดยไม่มีสิทธิ (ป.พ.พ. มาตรา 1336)`,
               `ต้องเรียกให้เพื่อนบ้านรื้อถอนส่วนที่รุกล้ำที่ดินแล้วทำที่ดินให้เป็นตามเดิม ผู้สร้างช่วยออกค่าใช้จ่ายได้ (ป.พ.พ. มาตรา 1312 วรรค 2)`
             ], id)
+          } else if (text.match(/หนี้บัตรเครดิต/) {
+            bot.sendText(REPLY.nomoney, id)
+          } else if (text.match(/ตำรวจยึดรถ/)) {
+            bot.sendText(REPLY.policetookmycar, id)
+          } else if (text.match(/แอบถ่าย/) {
+            bot.sendText(REPLY.paparazzis, id)
           } else if (JOKE_REPLY[text]) {
-            bot.sendText(JOKE_REPLY[text])
+            bot.sendText(JOKE_REPLY[text], id)
           } else {
             bot.sendText(JOKES[Math.floor(Math.random() * JOKES.length)], id)
           }
@@ -255,7 +261,7 @@ class WebHookHandler {
           }
 
           if (choice === "lawsuit") {
-            gotLawsuit()
+            gotLawsuit(id)
           }
 
           if (choice === "RektP") {
