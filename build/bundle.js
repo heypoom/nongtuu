@@ -674,18 +674,6 @@ var scripts = {
   "main": {}
 };
 
-var ChatStage = function (_MemoryService) {
-  _inherits(ChatStage, _MemoryService);
-
-  function ChatStage() {
-    _classCallCheck(this, ChatStage);
-
-    return _possibleConstructorReturn(this, (ChatStage.__proto__ || Object.getPrototypeOf(ChatStage)).apply(this, arguments));
-  }
-
-  return ChatStage;
-}(_feathersMemory2.default);
-
 var bot = new LineMessaging(CHANNEL_TOKEN);
 
 var LineService = function () {
@@ -718,6 +706,41 @@ var LineService = function () {
   return LineService;
 }();
 
+var ChatStage = function (_MemoryService) {
+  _inherits(ChatStage, _MemoryService);
+
+  function ChatStage() {
+    _classCallCheck(this, ChatStage);
+
+    return _possibleConstructorReturn(this, (ChatStage.__proto__ || Object.getPrototypeOf(ChatStage)).apply(this, arguments));
+  }
+
+  return ChatStage;
+}(_feathersMemory2.default);
+
+var initChat = function initChat(id) {
+  bot.sendText("Hello World", id);
+  bot.sendTemplate({
+    title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
+    text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
+    alt: "Alt Message",
+    thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
+    actions: [{
+      type: "postback",
+      label: "หนี้บัตรเครดิต",
+      data: "nomoney"
+    }, {
+      type: "postback",
+      label: "โดนตำรวจยึดรถ",
+      data: "policetookmycar"
+    }, {
+      type: "postback",
+      label: "ถูกแอบถ่ายลงโซเชียล",
+      data: "paparazzis"
+    }]
+  }, id);
+};
+
 var WebHookHandler = function WebHookHandler() {
   _classCallCheck(this, WebHookHandler);
 
@@ -728,34 +751,15 @@ var WebHookHandler = function WebHookHandler() {
   this.create = function () {
     var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    console.log("Incoming POST request:", data);
+    console.log("Incoming POST request:", JSON.stringify(data));
 
     // bot.sendText(`Incoming Msg: ${JSON.stringify(data)}`)
 
     if (data.events) {
       data.events.forEach(function (msg) {
         if (msg.type === "message") {
-          if (msg.message.text.indexOf("สวัสดี") > -1) {
-            bot.sendText("Hello World", msg.source.userId);
-            bot.sendTemplate({
-              title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
-              text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
-              alt: "Alt Message",
-              thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
-              actions: [{
-                type: "postback",
-                label: "หนี้บัตรเครดิต",
-                data: "nomoney"
-              }, {
-                type: "postback",
-                label: "โดนตำรวจยึดรถ",
-                data: "policetookmycar"
-              }, {
-                type: "postback",
-                label: "ถูกแอบถ่ายลงโซเชียล",
-                data: "paparazzis"
-              }]
-            }, msg.source.userId);
+          if (initChat.message.text.indexOf("สวัสดี") > -1) {
+            init(msg.source.userId);
           }
 
           if (msg.message.text === "HelloReply") {
@@ -765,15 +769,17 @@ var WebHookHandler = function WebHookHandler() {
 
         if (msg.type === "postback") {
           if (msg.postback.data === "nomoney") {
-            bot.sendText("Y u so poor lolz", msg.source.userId);
+            bot.sendText("\n              1.\u0E44\u0E1B\u0E15\u0E32\u0E21\u0E28\u0E32\u0E25\u0E19\u0E31\u0E14\n            \t2.\u0E04\u0E38\u0E22\u0E01\u0E31\u0E1A\u0E17\u0E19\u0E32\u0E22\u0E02\u0E2D\u0E07\u0E18\u0E19\u0E32\u0E04\u0E32\u0E23\u0E40\u0E08\u0E49\u0E32\u0E02\u0E2D\u0E07\u0E1A\u0E31\u0E15\u0E23 \u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E14\u0E39\u0E02\u0E49\u0E2D\u0E40\u0E2A\u0E19\u0E2D\u0E02\u0E2D\u0E07\u0E18\u0E19\u0E32\u0E04\u0E32\u0E23\n            \t3.\u0E16\u0E49\u0E32\u0E44\u0E21\u0E48\u0E44\u0E2B\u0E27 \u0E25\u0E2D\u0E07\u0E15\u0E48\u0E2D\u0E23\u0E2D\u0E07\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E40\u0E25\u0E37\u0E48\u0E2D\u0E19\u0E27\u0E31\u0E19\u0E0A\u0E33\u0E23\u0E30\n            \t4.\u0E2B\u0E25\u0E31\u0E07\u0E08\u0E32\u0E01\u0E19\u0E31\u0E49\u0E19\u0E17\u0E32\u0E07\u0E28\u0E32\u0E25\u0E08\u0E30\u0E43\u0E2B\u0E49\u0E40\u0E0B\u0E47\u0E19\u0E2A\u0E31\u0E0D\u0E0D\u0E32\u0E40\u0E25\u0E37\u0E48\u0E2D\u0E19\u0E27\u0E31\u0E19\u0E19\u0E31\u0E14\u0E04\u0E14\u0E35 \u0E41\u0E25\u0E49\u0E27\u0E01\u0E25\u0E31\u0E1A\u0E1A\u0E49\u0E32\u0E19\u0E44\u0E14\u0E49!\n            ", msg.source.userId);
+
+            bot.sendText("\n              1.\u0E40\u0E15\u0E23\u0E35\u0E22\u0E21\u0E40\u0E2D\u0E01\u0E2A\u0E32\u0E23\u0E41\u0E2A\u0E14\u0E07\u0E23\u0E32\u0E22\u0E44\u0E14\u0E49\n            \t2.\u0E15\u0E01\u0E25\u0E07\u0E01\u0E31\u0E1A\u0E18\u0E19\u0E32\u0E04\u0E32\u0E23\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E1C\u0E48\u0E2D\u0E19\u0E0A\u0E33\u0E23\u0E30\u0E15\u0E32\u0E21\u0E23\u0E32\u0E22\u0E44\u0E14\u0E49\n            \t3.\u0E16\u0E49\u0E32\u0E17\u0E32\u0E07\u0E18\u0E19\u0E32\u0E04\u0E32\u0E23\u0E23\u0E31\u0E1A\u0E44\u0E14\u0E49\u0E01\u0E47\u0E40\u0E2A\u0E23\u0E47\u0E08\u0E2A\u0E34\u0E49\u0E19 \u0E41\u0E15\u0E48\u0E16\u0E49\u0E32\u0E44\u0E21\u0E48\u0E01\u0E47\u0E17\u0E33\u0E15\u0E32\u0E21\u0E04\u0E33\u0E15\u0E31\u0E14\u0E2A\u0E34\u0E19\u0E02\u0E2D\u0E07\u0E28\u0E32\u0E25\n            ", msg.source.userId);
           }
 
           if (msg.postback.data === "policetookmycar") {
-            bot.sendText("Good for u", msg.source.userId);
+            bot.sendText("\n              1.\u0E16\u0E49\u0E32\u0E23\u0E16\u0E22\u0E31\u0E07\u0E1C\u0E48\u0E2D\u0E19\u0E44\u0E21\u0E48\u0E2B\u0E21\u0E14 \u0E15\u0E34\u0E14\u0E15\u0E48\u0E2D\u0E44\u0E1F\u0E41\u0E19\u0E19\u0E0B\u0E4C \u0E43\u0E2B\u0E49\u0E17\u0E33\u0E40\u0E23\u0E37\u0E48\u0E2D\u0E07\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E02\u0E2D\u0E04\u0E37\u0E19\n            \t2.\u0E41\u0E15\u0E48\u0E16\u0E49\u0E32\u0E1C\u0E48\u0E2D\u0E19\u0E2B\u0E21\u0E14\u0E41\u0E25\u0E49\u0E27 \u0E43\u0E2B\u0E49\u0E1B\u0E22\u0E37\u0E48\u0E19\u0E04\u0E33\u0E23\u0E49\u0E2D\u0E07\u0E15\u0E48\u0E2D\u0E28\u0E32\u0E25\u0E20\u0E32\u0E22\u0E43\u0E19 1 \u0E1B\u0E35 \u0E44\u0E21\u0E48\u0E40\u0E0A\u0E48\u0E19\u0E19\u0E31\u0E49\u0E19\u0E08\u0E30\u0E02\u0E36\u0E49\u0E19\u0E27\u0E48\u0E32\u0E2A\u0E39\u0E0D\u0E2B\u0E32\u0E22\n            ", msg.source.userId);
           }
 
-          if (msg.postback.data === "parparazzis") {
-            bot.sendText("Git Gud with da Cameraz", msg.source.userId);
+          if (msg.postback.data === "paparazzis") {
+            bot.sendText("\n              1. \u0E23\u0E27\u0E1A\u0E23\u0E27\u0E21\u0E2B\u0E25\u0E31\u0E01\u0E10\u0E32\u0E19\u0E17\u0E35\u0E48\u0E0A\u0E31\u0E14\u0E40\u0E08\u0E19\n\t            2.\u0E40\u0E02\u0E49\u0E32\u0E41\u0E08\u0E49\u0E07\u0E04\u0E27\u0E32\u0E21\u0E01\u0E31\u0E1A\u0E15\u0E33\u0E23\u0E27\u0E08\n            ", msg.source.userId);
           }
         }
       });

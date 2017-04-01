@@ -71,12 +71,6 @@ const scripts = {
   "main": {}
 }
 
-class ChatStage extends MemoryService {
-  // TODO: We need to store user's state in there.
-  //       I'm thinking of Redis, but fuck it I'm tired.
-  //       It's a hackathon, so yeah.
-}
-
 const bot = new LineMessaging(CHANNEL_TOKEN)
 
 class LineService {
@@ -98,38 +92,48 @@ class LineService {
   // get = () => Promise.resolve({data: "Hello World"})
 }
 
+class ChatStage extends MemoryService {
+  // TODO: We need to store user's state in there.
+  //       I'm thinking of Redis, but fuck it I'm tired.
+  //       It's a hackathon, so yeah.
+}
+
+const initChat = id => {
+  bot.sendText("Hello World", id)
+  bot.sendTemplate({
+    title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
+    text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
+    alt: "Alt Message",
+    thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
+    actions: [{
+      type: "postback",
+      label: "หนี้บัตรเครดิต",
+      data: "nomoney"
+    }, {
+      type: "postback",
+      label: "โดนตำรวจยึดรถ",
+      data: "policetookmycar"
+    }, {
+      type: "postback",
+      label: "ถูกแอบถ่ายลงโซเชียล",
+      data: "paparazzis"
+    }]
+  }, id)
+}
+
 class WebHookHandler {
   find = () => Promise.resolve({data: "OK v3"})
 
   create = (data = {}) => {
-    console.log("Incoming POST request:", data)
+    console.log("Incoming POST request:", JSON.stringify(data))
 
     // bot.sendText(`Incoming Msg: ${JSON.stringify(data)}`)
 
     if (data.events) {
       data.events.forEach(msg => {
         if (msg.type === "message") {
-          if (msg.message.text.indexOf("สวัสดี") > -1) {
-            bot.sendText("Hello World", msg.source.userId)
-            bot.sendTemplate({
-              title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
-              text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
-              alt: "Alt Message",
-              thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
-              actions: [{
-                type: "postback",
-                label: "หนี้บัตรเครดิต",
-                data: "nomoney"
-              }, {
-                type: "postback",
-                label: "โดนตำรวจยึดรถ",
-                data: "policetookmycar"
-              }, {
-                type: "postback",
-                label: "ถูกแอบถ่ายลงโซเชียล",
-                data: "paparazzis"
-              }]
-            }, msg.source.userId)
+          if (initChat.message.text.indexOf("สวัสดี") > -1) {
+            init(msg.source.userId)
           }
 
           if (msg.message.text === "HelloReply") {
@@ -139,15 +143,32 @@ class WebHookHandler {
 
         if (msg.type === "postback") {
           if (msg.postback.data === "nomoney") {
-            bot.sendText("Y u so poor lolz", msg.source.userId)
+            bot.sendText(`
+              1.ไปตามศาลนัด
+            	2.คุยกับทนายของธนาคารเจ้าของบัตร เพื่อดูข้อเสนอของธนาคาร
+            	3.ถ้าไม่ไหว ลองต่อรองเพื่อเลื่อนวันชำระ
+            	4.หลังจากนั้นทางศาลจะให้เซ็นสัญญาเลื่อนวันนัดคดี แล้วกลับบ้านได้!
+            `, msg.source.userId)
+
+            bot.sendText(`
+              1.เตรียมเอกสารแสดงรายได้
+            	2.ตกลงกับธนาคารเพื่อผ่อนชำระตามรายได้
+            	3.ถ้าทางธนาคารรับได้ก็เสร็จสิ้น แต่ถ้าไม่ก็ทำตามคำตัดสินของศาล
+            `, msg.source.userId)
           }
 
           if (msg.postback.data === "policetookmycar") {
-            bot.sendText("Good for u", msg.source.userId)
+            bot.sendText(`
+              1.ถ้ารถยังผ่อนไม่หมด ติดต่อไฟแนนซ์ ให้ทำเรื่องเพื่อขอคืน
+            	2.แต่ถ้าผ่อนหมดแล้ว ให้ปยื่นคำร้องต่อศาลภายใน 1 ปี ไม่เช่นนั้นจะขึ้นว่าสูญหาย
+            `, msg.source.userId)
           }
 
-          if (msg.postback.data === "parparazzis") {
-            bot.sendText("Git Gud with da Cameraz", msg.source.userId)
+          if (msg.postback.data === "paparazzis") {
+            bot.sendText(`
+              1. รวบรวมหลักฐานที่ชัดเจน
+	            2.เข้าแจ้งความกับตำรวจ
+            `, msg.source.userId)
           }
         }
       })
