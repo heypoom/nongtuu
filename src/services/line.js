@@ -120,14 +120,16 @@ const C2 = [
 
 const C3 = `ใจเย็นๆ ก่อน รีบรวบรวมหลักฐานที่ชัดเจน แล้วไปเข้าแจ้งความกับตำรวจนะ`
 
-const e = msg => {
+const e = (msg, m = 1) => {
   if (msg) {
-    if (msg.length > 1) {
+    if (msg.length > m) {
       return true
     }
   }
   return false
 }
+
+const JOKES = ["ปรีดีฆ่าในหลวง", "ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "แม้วพ่อมึงสิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "แม้วกราบโชว์"]
 
 class WebHookHandler {
   find = () => Promise.resolve({data: "OK v3"})
@@ -146,18 +148,14 @@ class WebHookHandler {
 
           if (text.match(/สวัสดี|หวัดดี/g)) {
             initChat(id)
-          }
-
-          if (e(text.match(/บัตร|หาย/g))) {
+          } else if (e(text.match(/บัตร|ประชา|หาย/g), 2)) {
             bot.sendText(`เอกสารที่ต้องเตรียม คือ บัตรที่สามารถใช้ยืนยันตัวตนที่หน่วยงานของรัฐออกให้ หรือสำเนาทะเบียนบ้าน`, id)
-          }
-
-          if (e(text.match(/ทำ|พาสปอร์ต|Passport/g))) {
-            bot.sendText(`จองคิวและดูวิธีการทำพาสสปอร์ตที่ https://www.passport.in.th`, id)
-          }
-
-          if (e(text.match(/ได้|หมายศาล/g))) {
-            bot.sendText(`เราจะช่วยคุณแน่ๆ ครับ คุณได้หมายศาลประเภทอะไรครับ`)
+          } else if (e(text.match(/ทำ|พาสปอร์ต|Passport/g))) {
+            bot.sendText(`จองคิวและดูวิธีการทำพาสปอร์ตที่ https://www.passport.in.th`, id)
+          } else if (e(text.match(/ได้|หมายศาล/g))) {
+            bot.sendText(`เราจะช่วยคุณแน่ๆ ครับ คุณได้หมายศาลประเภทอะไรครับ`, id)
+          } else {
+            bot.sendText(JOKES[Math.floor(Math.random() * JOKES.length)], id)
           }
         }
 

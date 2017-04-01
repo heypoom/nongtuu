@@ -726,13 +726,17 @@ var C2 = ["\u0E16\u0E49\u0E32\u0E23\u0E16\u0E40\u0E23\u0E32\u0E22\u0E31\u0E07\u0
 var C3 = "\u0E43\u0E08\u0E40\u0E22\u0E47\u0E19\u0E46 \u0E01\u0E48\u0E2D\u0E19 \u0E23\u0E35\u0E1A\u0E23\u0E27\u0E1A\u0E23\u0E27\u0E21\u0E2B\u0E25\u0E31\u0E01\u0E10\u0E32\u0E19\u0E17\u0E35\u0E48\u0E0A\u0E31\u0E14\u0E40\u0E08\u0E19 \u0E41\u0E25\u0E49\u0E27\u0E44\u0E1B\u0E40\u0E02\u0E49\u0E32\u0E41\u0E08\u0E49\u0E07\u0E04\u0E27\u0E32\u0E21\u0E01\u0E31\u0E1A\u0E15\u0E33\u0E23\u0E27\u0E08\u0E19\u0E30";
 
 var e = function e(msg) {
+  var m = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
   if (msg) {
-    if (msg.length > 1) {
+    if (msg.length > m) {
       return true;
     }
   }
   return false;
 };
+
+var JOKES = ["ปรีดีฆ่าในหลวง", "ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "แม้วพ่อมึงสิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "แม้วกราบโชว์"];
 
 var WebHookHandler = function WebHookHandler() {
   _classCallCheck(this, WebHookHandler);
@@ -757,18 +761,14 @@ var WebHookHandler = function WebHookHandler() {
 
           if (text.match(/สวัสดี|หวัดดี/g)) {
             initChat(id);
-          }
-
-          if (e(text.match(/บัตร|หาย/g))) {
+          } else if (e(text.match(/บัตร|ประชา|หาย/g), 2)) {
             bot.sendText("\u0E40\u0E2D\u0E01\u0E2A\u0E32\u0E23\u0E17\u0E35\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E15\u0E23\u0E35\u0E22\u0E21 \u0E04\u0E37\u0E2D \u0E1A\u0E31\u0E15\u0E23\u0E17\u0E35\u0E48\u0E2A\u0E32\u0E21\u0E32\u0E23\u0E16\u0E43\u0E0A\u0E49\u0E22\u0E37\u0E19\u0E22\u0E31\u0E19\u0E15\u0E31\u0E27\u0E15\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E19\u0E48\u0E27\u0E22\u0E07\u0E32\u0E19\u0E02\u0E2D\u0E07\u0E23\u0E31\u0E10\u0E2D\u0E2D\u0E01\u0E43\u0E2B\u0E49 \u0E2B\u0E23\u0E37\u0E2D\u0E2A\u0E33\u0E40\u0E19\u0E32\u0E17\u0E30\u0E40\u0E1A\u0E35\u0E22\u0E19\u0E1A\u0E49\u0E32\u0E19", id);
-          }
-
-          if (e(text.match(/ทำ|พาสปอร์ต|Passport/g))) {
-            bot.sendText("\u0E08\u0E2D\u0E07\u0E04\u0E34\u0E27\u0E41\u0E25\u0E30\u0E14\u0E39\u0E27\u0E34\u0E18\u0E35\u0E01\u0E32\u0E23\u0E17\u0E33\u0E1E\u0E32\u0E2A\u0E2A\u0E1B\u0E2D\u0E23\u0E4C\u0E15\u0E17\u0E35\u0E48 https://www.passport.in.th", id);
-          }
-
-          if (e(text.match(/ได้|หมายศาล/g))) {
-            bot.sendText("\u0E40\u0E23\u0E32\u0E08\u0E30\u0E0A\u0E48\u0E27\u0E22\u0E04\u0E38\u0E13\u0E41\u0E19\u0E48\u0E46 \u0E04\u0E23\u0E31\u0E1A \u0E04\u0E38\u0E13\u0E44\u0E14\u0E49\u0E2B\u0E21\u0E32\u0E22\u0E28\u0E32\u0E25\u0E1B\u0E23\u0E30\u0E40\u0E20\u0E17\u0E2D\u0E30\u0E44\u0E23\u0E04\u0E23\u0E31\u0E1A");
+          } else if (e(text.match(/ทำ|พาสปอร์ต|Passport/g))) {
+            bot.sendText("\u0E08\u0E2D\u0E07\u0E04\u0E34\u0E27\u0E41\u0E25\u0E30\u0E14\u0E39\u0E27\u0E34\u0E18\u0E35\u0E01\u0E32\u0E23\u0E17\u0E33\u0E1E\u0E32\u0E2A\u0E1B\u0E2D\u0E23\u0E4C\u0E15\u0E17\u0E35\u0E48 https://www.passport.in.th", id);
+          } else if (e(text.match(/ได้|หมายศาล/g))) {
+            bot.sendText("\u0E40\u0E23\u0E32\u0E08\u0E30\u0E0A\u0E48\u0E27\u0E22\u0E04\u0E38\u0E13\u0E41\u0E19\u0E48\u0E46 \u0E04\u0E23\u0E31\u0E1A \u0E04\u0E38\u0E13\u0E44\u0E14\u0E49\u0E2B\u0E21\u0E32\u0E22\u0E28\u0E32\u0E25\u0E1B\u0E23\u0E30\u0E40\u0E20\u0E17\u0E2D\u0E30\u0E44\u0E23\u0E04\u0E23\u0E31\u0E1A", id);
+          } else {
+            bot.sendText(JOKES[Math.floor(Math.random() * JOKES.length)], id);
           }
         }
 
