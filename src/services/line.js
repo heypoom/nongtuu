@@ -1,4 +1,4 @@
-import request from "request"
+import request from "request-promise-native"
 
 // API "Secrets". Feel free to steal them. I don't give a single F.
 // TODO: Move that to Environment Variables, but I ain't got no time
@@ -43,14 +43,21 @@ class LineService {
   })
 
   get = message => {
-    request.post("https://api.line.me/v2/bot/message/push", {
-      to: TEST_USER_ID,
-      messages: [{
-        type: "text",
-        text: `[ECHO] ${message}`
-      }]
+    request({
+      method: "POST",
+      uri: "https://api.line.me/v2/bot/message/push",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        to: TEST_USER_ID,
+        messages: [{
+          type: "text",
+          text: `[ECHO] ${message}`
+        }]
+      })
+    }, (err, msg) => {
+      console.log(err)
     }).auth(null, null, true, CHANNEL_TOKEN)
-    return Promise.resolve({data: "200 OK"})
+    return Promise.resolve({data: "200 OK", time: new Date().toLocaleString()})
   }
 
   // get = () => Promise.resolve({data: "Hello World"})

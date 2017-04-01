@@ -572,9 +572,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 exports.default = debug;
 
-var _request = __webpack_require__(22);
+var _requestPromiseNative = __webpack_require__(22);
 
-var _request2 = _interopRequireDefault(_request);
+var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -624,14 +624,21 @@ var LineService = function () {
     };
 
     this.get = function (message) {
-      _request2.default.post("https://api.line.me/v2/bot/message/push", {
-        to: TEST_USER_ID,
-        messages: [{
-          type: "text",
-          text: "[ECHO] " + message
-        }]
+      (0, _requestPromiseNative2.default)({
+        method: "POST",
+        uri: "https://api.line.me/v2/bot/message/push",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: TEST_USER_ID,
+          messages: [{
+            type: "text",
+            text: "[ECHO] " + message
+          }]
+        })
+      }, function (err, msg) {
+        console.log(err);
       }).auth(null, null, true, CHANNEL_TOKEN);
-      return Promise.resolve({ data: "200 OK" });
+      return Promise.resolve({ data: "200 OK", time: new Date().toLocaleString() });
     };
   }
 
@@ -716,7 +723,7 @@ module.exports = require("graphql-tools");
 /* 22 */
 /***/ (function(module, exports) {
 
-module.exports = require("request");
+module.exports = require("request-promise-native");
 
 /***/ })
 /******/ ]);
