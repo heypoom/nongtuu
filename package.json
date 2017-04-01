@@ -17,6 +17,7 @@
     "feathers-errors": "^2.6.2",
     "feathers-hooks": "^1.8.1",
     "feathers-hooks-common": "^2.0.3",
+    "feathers-memory": "^1.1.0",
     "feathers-mongoose": "^5.0.3",
     "feathers-rest": "^1.7.1",
     "feathers-socketio": "^1.5.2",

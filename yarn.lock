@@ -1998,6 +1998,15 @@ feathers-hooks@^1.5.0, feathers-hooks@^1.8.1:
     feathers-hooks-common "^2.0.3"
     uberproto "^1.2.0"
 
+feathers-memory@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/feathers-memory/-/feathers-memory-1.1.0.tgz#da7b23ebeec46fa81bcee4778191287581d5c2a6"
+  dependencies:
+    feathers-commons "^0.8.0"
+    feathers-errors "^2.0.1"
+    feathers-query-filters "^2.0.0"
+    uberproto "^1.2.0"
+
 feathers-mongoose@^5.0.3:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/feathers-mongoose/-/feathers-mongoose-5.0.3.tgz#3465f304fe44972a4471002c4d83c4b31aefaf7d"
@@ -2008,7 +2017,7 @@ feathers-mongoose@^5.0.3:
     lodash.omit "^4.3.0"
     uberproto "^1.2.0"
 
-feathers-query-filters@^2.1.2:
+feathers-query-filters@^2.0.0, feathers-query-filters@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/feathers-query-filters/-/feathers-query-filters-2.1.2.tgz#cdb18224db5e19cc0140d528108e0908d5eb0654"
   dependencies:

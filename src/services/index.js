@@ -6,4 +6,9 @@ export default function services() {
   this.configure(debug)
   this.configure(line)
   this.configure(graphql)
+
+  this.use("linehook", (req, res) => {
+    console.log(req)
+    res.send("WebHook Handler")
+  })
 }

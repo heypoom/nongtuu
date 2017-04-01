@@ -1,3 +1,4 @@
+import MemoryService from "feathers-memory"
 import request from "request-promise-native"
 
 // API "Secrets". Feel free to steal them. I don't give a single F.
@@ -62,7 +63,7 @@ class LineMessaging {
 
 }
 
-class ChatStage {
+class ChatStage extends MemoryService {
   // TODO: We need to store user's state in there.
   //       I'm thinking of Redis, but fuck it I'm tired.
   //       It's a hackathon, so yeah.
@@ -87,15 +88,6 @@ class LineService {
   }
 
   // get = () => Promise.resolve({data: "Hello World"})
-}
-
-class WebHookHandler {
-  find = () => Promise.resolve({data: "OK"})
-
-  create = data => {
-    console.log("Incoming POST request:", data)
-    return Promise.resolve({data: "OK"})
-  }
 }
 
 export default function debug() {
