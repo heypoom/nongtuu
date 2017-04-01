@@ -758,8 +758,8 @@ var WebHookHandler = function WebHookHandler() {
     if (data.events) {
       data.events.forEach(function (msg) {
         if (msg.type === "message") {
-          if (initChat.message.text.indexOf("สวัสดี") > -1) {
-            init(msg.source.userId);
+          if (msg.message.text.indexOf("สวัสดี") > -1) {
+            initChat(msg.source.userId);
           }
 
           if (msg.message.text === "HelloReply") {
