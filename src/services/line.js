@@ -50,7 +50,7 @@ class LineService {
         text: `[ECHO] ${message}`
       }]
     }).auth(null, null, true, CHANNEL_TOKEN)
-    Promise.resolve({data: "200 OK"})
+    return Promise.resolve({data: "200 OK"})
   }
 
   // get = () => Promise.resolve({data: "Hello World"})
