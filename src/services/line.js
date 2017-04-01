@@ -45,11 +45,11 @@ class LineMessaging {
     }
   }
 
-  sendText(message) {
+  sendText(message, reply) {
     this.sendMessage({
       type: "text",
       text: `${message}`
-    })
+    }, reply)
   }
 
   sendTemplate({title, text, alt = "This is an alt text", thumbnail = defaultImage, actions = defaultAction, reply}) {
@@ -110,7 +110,7 @@ class WebHookHandler {
       data.events.forEach(msg => {
         if (msg.type === "message") {
           if (msg.message.text.indexOf("สวัสดี") > -1) {
-            bot.sendMessage("Hello World", msg.message.replyToken)
+            bot.sendText("Hello World", msg.message.replyToken)
             bot.sendTemplate({
               title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
               text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",

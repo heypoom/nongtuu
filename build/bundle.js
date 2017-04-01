@@ -637,11 +637,11 @@ var LineMessaging = function () {
     }
   }, {
     key: "sendText",
-    value: function sendText(message) {
+    value: function sendText(message, reply) {
       this.sendMessage({
         type: "text",
         text: "" + message
-      });
+      }, reply);
     }
   }, {
     key: "sendTemplate",
@@ -738,7 +738,7 @@ var WebHookHandler = function WebHookHandler() {
       data.events.forEach(function (msg) {
         if (msg.type === "message") {
           if (msg.message.text.indexOf("สวัสดี") > -1) {
-            bot.sendMessage("Hello World", msg.message.replyToken);
+            bot.sendText("Hello World", msg.message.replyToken);
             bot.sendTemplate({
               title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
               text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
