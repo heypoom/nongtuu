@@ -58,13 +58,13 @@ class LineMessaging {
     })
   }
 
-  sendTemplate(title, text, alt = "This is an alt text", thumbnail, action = defaultAction) {
+  sendTemplate(title, text, alt = "This is an alt text", thumbnail = defaultImage, action = defaultAction) {
     this.sendMessage({
       type: "template",
       altText: alt,
       template: {
         type: "buttons",
-        thumbnailImageUrl: thumbnail || defaultImage,
+        thumbnailImageUrl: thumbnail,
         title,
         text,
         actions
@@ -112,7 +112,7 @@ class WebHookHandler {
       data.events.forEach(msg => {
         if (msg.type === "message") {
           if (msg.message.text === "Hello") {
-            bot.sendText("Hello Dude!")
+            bot.sendText("Hello~~~")
             bot.sendTemplate("หัวข้อ", "ข้อมูล", "ข้อความ")
           }
 
@@ -123,7 +123,7 @@ class WebHookHandler {
       })
     }
 
-    return Promise.resolve({data: "OK"})
+    return Promise.resolve({data: "OK v1"})
   }
 }
 

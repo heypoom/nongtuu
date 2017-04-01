@@ -654,7 +654,7 @@ var LineMessaging = function () {
     key: "sendTemplate",
     value: function sendTemplate(title, text) {
       var alt = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "This is an alt text";
-      var thumbnail = arguments[3];
+      var thumbnail = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : defaultImage;
       var action = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultAction;
 
       this.sendMessage({
@@ -662,7 +662,7 @@ var LineMessaging = function () {
         altText: alt,
         template: {
           type: "buttons",
-          thumbnailImageUrl: thumbnail || defaultImage,
+          thumbnailImageUrl: thumbnail,
           title: title,
           text: text,
           actions: actions
@@ -735,7 +735,7 @@ var WebHookHandler = function WebHookHandler() {
       data.events.forEach(function (msg) {
         if (msg.type === "message") {
           if (msg.message.text === "Hello") {
-            bot.sendText("Hello Dude!");
+            bot.sendText("Hello~~~");
             bot.sendTemplate("หัวข้อ", "ข้อมูล", "ข้อความ");
           }
 
@@ -746,7 +746,7 @@ var WebHookHandler = function WebHookHandler() {
       });
     }
 
-    return Promise.resolve({ data: "OK" });
+    return Promise.resolve({ data: "OK v1" });
   };
 };
 
