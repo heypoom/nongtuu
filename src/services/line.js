@@ -1,6 +1,6 @@
 import request from "request"
 
-// API Secrets
+// API "Secrets". Feel free to steal them. I don't give a single F.
 // TODO: Move that to Environment Variables, but I ain't got no time
 
 const CHANNEL_ID = "1508478196"

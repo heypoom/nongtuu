@@ -197,7 +197,7 @@ app.configure(_services2.default);
 
 console.log("info", process.env.NODE_ENV);
 
-app.listen(3000);
+app.listen(80);
 
 /***/ }),
 /* 4 */
@@ -580,7 +580,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// API Secrets
+// API "Secrets". Feel free to steal them. I don't give a single F.
 // TODO: Move that to Environment Variables, but I ain't got no time
 
 var CHANNEL_ID = "1508478196";
