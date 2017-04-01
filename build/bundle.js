@@ -597,6 +597,18 @@ var TEST_USER_ID = "U33084216cc1a00f7aa27632bec769356";
 // SDK for interfacing with the LINE Messaging API
 // NOTE: Why the heck are the Official SDKs deprecated? Like, seriously dude? -.-
 
+var defaultAction = [{
+  type: "postback",
+  label: "หนี้บัตรเครดิต",
+  data: "action=buy&itemid=123"
+}, {
+  type: "postback",
+  label: "กฎหมายที่ดิน",
+  data: "action=add&itemid=123"
+}];
+
+var defaultImage = "https://images.unsplash.com/reserve/uvRBqDAfQfaGPJiI6lVS_R0001899.jpg?dpr=1&auto=format&fit=crop&w=1500&h=994&q=80&cs=tinysrgb&crop=";
+
 var LineMessaging = function () {
   function LineMessaging(token) {
     _classCallCheck(this, LineMessaging);
@@ -641,23 +653,19 @@ var LineMessaging = function () {
   }, {
     key: "sendTemplate",
     value: function sendTemplate(title, text) {
+      var alt = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "This is an alt text";
+      var thumbnail = arguments[3];
+      var action = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultAction;
+
       this.sendMessage({
         type: "template",
-        altText: "this is a buttons template",
+        altText: alt,
         template: {
           type: "buttons",
-          thumbnailImageUrl: "https://images.unsplash.com/reserve/uvRBqDAfQfaGPJiI6lVS_R0001899.jpg?dpr=1&auto=format&fit=crop&w=1500&h=994&q=80&cs=tinysrgb&crop=",
+          thumbnailImageUrl: thumbnail || defaultImage,
           title: title,
           text: text,
-          actions: [{
-            type: "postback",
-            label: "หนี้บัตรเครดิต",
-            data: "action=buy&itemid=123"
-          }, {
-            type: "postback",
-            label: "กฎหมายที่ดิน",
-            data: "action=add&itemid=123"
-          }]
+          actions: actions
         }
       });
     }
@@ -727,7 +735,11 @@ var WebHookHandler = function WebHookHandler() {
       data.events.forEach(function (msg) {
         if (msg.type === "message") {
           if (msg.message.text === "Hello") {
-            // bot.sendText("Hello Dude!")
+            bot.sendText("Hello Dude!");
+            bot.sendTemplate("หัวข้อ", "ข้อมูล", "ข้อความ");
+          }
+
+          if (msg.message.text === "HelloReply") {
             bot.reply({ type: "text", text: "Hello Man!" }, msg.message.replyToken);
           }
         }

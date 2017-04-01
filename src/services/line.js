@@ -10,6 +10,18 @@ const TEST_USER_ID = "U33084216cc1a00f7aa27632bec769356"
 // SDK for interfacing with the LINE Messaging API
 // NOTE: Why the heck are the Official SDKs deprecated? Like, seriously dude? -.-
 
+const defaultAction = [{
+  type: "postback",
+  label: "หนี้บัตรเครดิต",
+  data: "action=buy&itemid=123"
+}, {
+  type: "postback",
+  label: "กฎหมายที่ดิน",
+  data: "action=add&itemid=123"
+}]
+
+const defaultImage = `https://images.unsplash.com/reserve/uvRBqDAfQfaGPJiI6lVS_R0001899.jpg?dpr=1&auto=format&fit=crop&w=1500&h=994&q=80&cs=tinysrgb&crop=`
+
 class LineMessaging {
 
   constructor(token) {
@@ -46,24 +58,16 @@ class LineMessaging {
     })
   }
 
-  sendTemplate(title, text) {
+  sendTemplate(title, text, alt = "This is an alt text", thumbnail, action = defaultAction) {
     this.sendMessage({
       type: "template",
-      altText: "this is a buttons template",
+      altText: alt,
       template: {
         type: "buttons",
-        thumbnailImageUrl: "https://images.unsplash.com/reserve/uvRBqDAfQfaGPJiI6lVS_R0001899.jpg?dpr=1&auto=format&fit=crop&w=1500&h=994&q=80&cs=tinysrgb&crop=",
+        thumbnailImageUrl: thumbnail || defaultImage,
         title,
         text,
-        actions: [{
-          type: "postback",
-          label: "หนี้บัตรเครดิต",
-          data: "action=buy&itemid=123"
-        }, {
-          type: "postback",
-          label: "กฎหมายที่ดิน",
-          data: "action=add&itemid=123"
-        }]
+        actions
       }
     })
   }
@@ -108,7 +112,11 @@ class WebHookHandler {
       data.events.forEach(msg => {
         if (msg.type === "message") {
           if (msg.message.text === "Hello") {
-            // bot.sendText("Hello Dude!")
+            bot.sendText("Hello Dude!")
+            bot.sendTemplate("หัวข้อ", "ข้อมูล", "ข้อความ")
+          }
+
+          if (msg.message.text === "HelloReply") {
             bot.reply({type: "text", text: "Hello Man!"}, msg.message.replyToken)
           }
         }
