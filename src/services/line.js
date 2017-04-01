@@ -93,9 +93,20 @@ class LineService {
 class WebHookHandler {
   find = () => Promise.resolve({data: "OK"})
 
-  create = data => {
+  create = (data = {}) => {
     console.log("Incoming POST request:", data)
     bot.sendText(`Incoming Msg: ${JSON.stringify(data)}`)
+
+    if (data.events) {
+      data.events.forEach(msg => {
+        if (msg.type === "message") {
+          if (msg.message.text === "Hello") {
+            bot.sendText("Hello Dude!")
+          }
+        }
+      })
+    }
+
     return Promise.resolve({data: "OK"})
   }
 }
