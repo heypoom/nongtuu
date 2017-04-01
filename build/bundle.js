@@ -623,6 +623,14 @@ var LineMessaging = function () {
       });
     }
   }, {
+    key: "reply",
+    value: function reply(message, to) {
+      this.post("message/reply", {
+        replyToken: to,
+        messages: [message]
+      });
+    }
+  }, {
     key: "sendText",
     value: function sendText(message) {
       this.sendMessage({
@@ -719,7 +727,8 @@ var WebHookHandler = function WebHookHandler() {
       data.events.forEach(function (msg) {
         if (msg.type === "message") {
           if (msg.message.text === "Hello") {
-            bot.sendText("Hello Dude!");
+            // bot.sendText("Hello Dude!")
+            bot.reply({ type: "text", text: "Hello Man!" }, msg.message.replyToken);
           }
         }
       });

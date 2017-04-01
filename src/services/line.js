@@ -32,6 +32,13 @@ class LineMessaging {
     })
   }
 
+  reply(message, to) {
+    this.post("message/reply", {
+      replyToken: to,
+      messages: [message]
+    })
+  }
+
   sendText(message) {
     this.sendMessage({
       type: "text",
@@ -101,7 +108,8 @@ class WebHookHandler {
       data.events.forEach(msg => {
         if (msg.type === "message") {
           if (msg.message.text === "Hello") {
-            bot.sendText("Hello Dude!")
+            // bot.sendText("Hello Dude!")
+            bot.reply({type: "text", text: "Hello Man!"}, msg.message.replyToken)
           }
         }
       })
