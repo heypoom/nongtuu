@@ -10,4 +10,4 @@ app.configure(services)
 
 console.log("info", process.env.NODE_ENV)
 
-app.listen(80)
+app.listen(process.env.PORT || "3000")

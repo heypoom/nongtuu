@@ -197,7 +197,7 @@ app.configure(_services2.default);
 
 console.log("info", process.env.NODE_ENV);
 
-app.listen(80);
+app.listen(process.env.PORT || "3000");
 
 /***/ }),
 /* 4 */
