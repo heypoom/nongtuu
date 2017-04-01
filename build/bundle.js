@@ -94,15 +94,15 @@ var _feathersHooks = __webpack_require__(16);
 
 var _feathersHooks2 = _interopRequireDefault(_feathersHooks);
 
-var _feathersRest = __webpack_require__(17);
+var _feathersRest = __webpack_require__(18);
 
 var _feathersRest2 = _interopRequireDefault(_feathersRest);
 
-var _feathersSocketio = __webpack_require__(18);
+var _feathersSocketio = __webpack_require__(19);
 
 var _feathersSocketio2 = _interopRequireDefault(_feathersSocketio);
 
-var _feathersSync = __webpack_require__(19);
+var _feathersSync = __webpack_require__(20);
 
 var _feathersSync2 = _interopRequireDefault(_feathersSync);
 
@@ -167,6 +167,11 @@ function services() {
   this.configure(_debug2.default);
   this.configure(_line2.default);
   this.configure(_graphql2.default);
+
+  this.use("linehook", function (req, res) {
+    console.log(req);
+    res.send("WebHook Handler");
+  });
 }
 
 /***/ }),
@@ -278,9 +283,9 @@ exports.default = function () {
   }));
 };
 
-var _graphqlServerExpress = __webpack_require__(20);
+var _graphqlServerExpress = __webpack_require__(21);
 
-var _graphqlTools = __webpack_require__(21);
+var _graphqlTools = __webpack_require__(22);
 
 var _resolvers = __webpack_require__(6);
 
@@ -572,11 +577,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 exports.default = debug;
 
-var _requestPromiseNative = __webpack_require__(22);
+var _feathersMemory = __webpack_require__(17);
+
+var _feathersMemory2 = _interopRequireDefault(_feathersMemory);
+
+var _requestPromiseNative = __webpack_require__(23);
 
 var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -650,9 +663,17 @@ var LineMessaging = function () {
   return LineMessaging;
 }();
 
-var ChatStage = function ChatStage() {
-  _classCallCheck(this, ChatStage);
-};
+var ChatStage = function (_MemoryService) {
+  _inherits(ChatStage, _MemoryService);
+
+  function ChatStage() {
+    _classCallCheck(this, ChatStage);
+
+    return _possibleConstructorReturn(this, (ChatStage.__proto__ || Object.getPrototypeOf(ChatStage)).apply(this, arguments));
+  }
+
+  return ChatStage;
+}(_feathersMemory2.default);
 
 var bot = new LineMessaging(CHANNEL_TOKEN);
 
@@ -685,19 +706,6 @@ var LineService = function () {
 
   return LineService;
 }();
-
-var WebHookHandler = function WebHookHandler() {
-  _classCallCheck(this, WebHookHandler);
-
-  this.find = function () {
-    return Promise.resolve({ data: "OK" });
-  };
-
-  this.create = function (data) {
-    console.log("Incoming POST request:", data);
-    return Promise.resolve({ data: "OK" });
-  };
-};
 
 function debug() {
   this.use("line", new LineService());
@@ -738,34 +746,40 @@ module.exports = require("feathers-hooks");
 /* 17 */
 /***/ (function(module, exports) {
 
-module.exports = require("feathers-rest");
+module.exports = require("feathers-memory");
 
 /***/ }),
 /* 18 */
 /***/ (function(module, exports) {
 
-module.exports = require("feathers-socketio");
+module.exports = require("feathers-rest");
 
 /***/ }),
 /* 19 */
 /***/ (function(module, exports) {
 
-module.exports = require("feathers-sync");
+module.exports = require("feathers-socketio");
 
 /***/ }),
 /* 20 */
 /***/ (function(module, exports) {
 
-module.exports = require("graphql-server-express");
+module.exports = require("feathers-sync");
 
 /***/ }),
 /* 21 */
 /***/ (function(module, exports) {
 
-module.exports = require("graphql-tools");
+module.exports = require("graphql-server-express");
 
 /***/ }),
 /* 22 */
+/***/ (function(module, exports) {
+
+module.exports = require("graphql-tools");
+
+/***/ }),
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = require("request-promise-native");
