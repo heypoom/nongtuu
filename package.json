@@ -24,7 +24,7 @@
     "graphql": "^0.9.1",
     "graphql-server-express": "^0.6.0",
     "graphql-tools": "^0.11.0",
-    "line-bot-sdk": "^0.1.4"
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "babel-core": "^6.24.0",
