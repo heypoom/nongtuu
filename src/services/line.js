@@ -110,13 +110,13 @@ class WebHookHandler {
       data.events.forEach(msg => {
         if (msg.type === "message") {
           if (msg.message.text.indexOf("สวัสดี") > -1) {
-            bot.sendText("Hello World", msg.message.replyToken)
+            bot.sendText("Hello World", msg.replyToken)
             bot.sendTemplate({
               title: "สวัสดีค่ะ มีอะไรให้ปรึกษาไหมคะ?",
               text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีค่ะ",
               alt: "Alt Message",
               thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
-              action: [{
+              actions: [{
                 type: "postback",
                 label: "หนี้บัตรเครดิต",
                 data: "action=nomoney"
@@ -129,12 +129,12 @@ class WebHookHandler {
                 label: "ถูกแอบถ่ายลงโซเชียล",
                 data: "action=paparazzis"
               }],
-              reply: msg.message.replyToken
+              reply: msg.replyToken
             })
           }
 
           if (msg.message.text === "HelloReply") {
-            bot.sendMessage({type: "text", text: "Hello Man!"}, msg.message.replyToken)
+            bot.sendMessage({type: "text", text: "Hello Man!"}, msg.replyToken)
           }
         }
       })
