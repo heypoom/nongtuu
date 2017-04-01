@@ -747,6 +747,28 @@ var e = function e(msg) {
 
 var JOKES = ["ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "ตะมุตะมิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "ปั๊ดโธ่ววววววววว"];
 
+var JOKE_REPLY = {
+  "เมื่อไรจะออก": "คนไทยฝากอนาคตไว้กับผม ได้ยินทีไรน้ำตาไหลทุกที",
+  "ควย": "เดี่ยวทุมด้วยโพเที่ยมหรอก ปัทโธ่",
+  "เจอได้นะตู่": "ถ้าเบื่อผมก็เปลี่ยนช่อง",
+  "เห็บหมา": "เอาไปขายที่ดาวอังคาร ขายได้ราคาดี",
+  "เบื่อตู่": "ไหนใครมีปัญหาอะไร ไปคุยกันที่ค่าย",
+  "ต้องการประชาธิปไตย": "ไม่ออก ใครจะออก ผมไม่ออก",
+  "คสช คือไร": "ทหารตอบได้ ถามป่าว",
+  "ตะมุตะมิ": "ผมเพื่อนเล่นคุณเหรอ ทุเรียน",
+  "ประเทศนี้ของใคร": "ของผมจบปิ้ง",
+  "สวัสดีลุง": "เอากองไว้ตรงนั้นและ ไม่ได้มีความสำคัญอะไร",
+  "นอนก่อน": "เจริญพร ชิตังเม โป้ง รวยๆ"
+};
+
+/*
+  Object.keys(o).forEach(e => {
+    if ("namelol".match(e)) {
+      console.log("WTF")
+    }
+  })
+*/
+
 var WebHookHandler = function WebHookHandler() {
   _classCallCheck(this, WebHookHandler);
 
@@ -800,6 +822,8 @@ var WebHookHandler = function WebHookHandler() {
                 data: "4"
               }]
             }, id);
+          } else if (JOKE_REPLY[text]) {
+            bot.sendText(JOKE_REPLY[text]);
           } else {
             bot.sendText(JOKES[Math.floor(Math.random() * JOKES.length)], id);
           }
