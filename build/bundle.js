@@ -622,6 +622,17 @@ var LineService = function () {
         data: "LINE Integration Service is Ready!"
       });
     };
+
+    this.get = function (message) {
+      _request2.default.post("https://api.line.me/v2/bot/message/push", {
+        to: TEST_USER_ID,
+        messages: [{
+          type: "text",
+          text: "[ECHO] " + message
+        }]
+      }).auth(null, null, true, CHANNEL_TOKEN);
+      Promise.resolve({ data: "200 OK" });
+    };
   }
 
   _createClass(LineService, [{
