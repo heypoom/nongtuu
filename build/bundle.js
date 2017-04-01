@@ -708,8 +708,8 @@ var ChatStage = function (_MemoryService) {
 
 var initChat = function initChat(id) {
   bot.sendTemplate({
-    title: "สวัสดีครับ มีอะไรให้ปรึกษาไหมคะ?",
-    text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีครับ",
+    title: "สวัสดีครับ มีอะไรให้ปรึกษาไหมครับ?",
+    text: "นี่เป็นเคสที่พบบ่อย ถ้าสงสัยนอกเหนือจากนี้ถามได้เลยนะครับ",
     alt: "Alt Message",
     thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
     actions: [{
@@ -745,7 +745,7 @@ var e = function e(msg) {
   return false;
 };
 
-var JOKES = ["ปรีดีฆ่าในหลวง", "ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "แม้วพ่อมึงสิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "แม้วกราบโชว์"];
+var JOKES = ["ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "แม้วพ่อเอ็งสิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "แม้วกราบโชว์"];
 
 var WebHookHandler = function WebHookHandler() {
   _classCallCheck(this, WebHookHandler);
@@ -778,9 +778,7 @@ var WebHookHandler = function WebHookHandler() {
             bot.sendText("\u0E08\u0E2D\u0E07\u0E04\u0E34\u0E27\u0E41\u0E25\u0E30\u0E14\u0E39\u0E27\u0E34\u0E18\u0E35\u0E01\u0E32\u0E23\u0E17\u0E33\u0E1E\u0E32\u0E2A\u0E1B\u0E2D\u0E23\u0E4C\u0E15\u0E17\u0E35\u0E48 https://www.passport.in.th", id);
             bot.sendImage("https://i.imgur.com/VRItpao.jpg", id);
             initChat(id);
-          } else if (e(text.match(/ได้|หมายศาล/g))) {
-            bot.sendText(" ", id);
-
+          } else if (e(text.match(/ได้|โดน|หมายศาล/g))) {
             bot.sendTemplate({
               title: "คุณได้หมายศาลประเภทอะไรครับ?",
               text: "เราจะช่วยคุณแน่ๆ ครับ แต่รบกวนตอบคำถามก่อนนะครับ",

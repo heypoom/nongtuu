@@ -96,8 +96,8 @@ class ChatStage extends MemoryService {
 
 const initChat = id => {
   bot.sendTemplate({
-    title: "สวัสดีครับ มีอะไรให้ปรึกษาไหมคะ?",
-    text: "นี่เป็นเคสที่พบบ่อย สามารถเลือกได้ทันทีครับ",
+    title: "สวัสดีครับ มีอะไรให้ปรึกษาไหมครับ?",
+    text: "นี่เป็นเคสที่พบบ่อย ถ้าสงสัยนอกเหนือจากนี้ถามได้เลยนะครับ",
     alt: "Alt Message",
     thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
     actions: [{
@@ -137,7 +137,7 @@ const e = (msg, m = 1) => {
   return false
 }
 
-const JOKES = ["ปรีดีฆ่าในหลวง", "ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "แม้วพ่อมึงสิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "แม้วกราบโชว์"]
+const JOKES = ["ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "แม้วพ่อเอ็งสิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "แม้วกราบโชว์"]
 
 class WebHookHandler {
   find = () => Promise.resolve({data: "OK v3"})
@@ -164,9 +164,7 @@ class WebHookHandler {
             bot.sendText(`จองคิวและดูวิธีการทำพาสปอร์ตที่ https://www.passport.in.th`, id)
             bot.sendImage(`https://i.imgur.com/VRItpao.jpg`, id)
             initChat(id)
-          } else if (e(text.match(/ได้|หมายศาล/g))) {
-            bot.sendText(` `, id)
-
+          } else if (e(text.match(/ได้|โดน|หมายศาล/g))) {
             bot.sendTemplate({
               title: "คุณได้หมายศาลประเภทอะไรครับ?",
               text: "เราจะช่วยคุณแน่ๆ ครับ แต่รบกวนตอบคำถามก่อนนะครับ",
