@@ -121,7 +121,7 @@ const C2 = [
 const C3 = `ใจเย็นๆ ก่อน รีบรวบรวมหลักฐานที่ชัดเจน แล้วไปเข้าแจ้งความกับตำรวจนะ`
 
 const e = msg => {
-  if (msg.length) {
+  if (msg) {
     if (msg.length > 1) {
       return true
     }
