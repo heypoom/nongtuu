@@ -745,7 +745,7 @@ var e = function e(msg) {
   return false;
 };
 
-var JOKES = ["ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "แม้วพ่อเอ็งสิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "แม้วกราบโชว์"];
+var JOKES = ["ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "ตะมุตะมิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "ปั๊ดโธ่ววววววววว"];
 
 var WebHookHandler = function WebHookHandler() {
   _classCallCheck(this, WebHookHandler);

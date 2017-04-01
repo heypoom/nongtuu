@@ -137,7 +137,12 @@ const e = (msg, m = 1) => {
   return false
 }
 
-const JOKES = ["ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "แม้วพ่อเอ็งสิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "แม้วกราบโชว์"]
+const JOKES = [
+  "ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ",
+  "ตะมุตะมิ",
+  "เดี๋ยวทุ่มด้วยโพเดี้ยม",
+  "ปั๊ดโธ่ววววววววว"
+]
 
 class WebHookHandler {
   find = () => Promise.resolve({data: "OK v3"})
