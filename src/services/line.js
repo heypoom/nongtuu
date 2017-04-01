@@ -42,6 +42,17 @@ class LineService {
     data: "LINE Integration Service is Ready!"
   })
 
+  get = message => {
+    request.post("https://api.line.me/v2/bot/message/push", {
+      to: TEST_USER_ID,
+      messages: [{
+        type: "text",
+        text: `[ECHO] ${message}`
+      }]
+    }).auth(null, null, true, CHANNEL_TOKEN)
+    Promise.resolve({data: "200 OK"})
+  }
+
   // get = () => Promise.resolve({data: "Hello World"})
 }
 
