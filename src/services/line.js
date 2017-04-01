@@ -55,6 +55,14 @@ class LineMessaging {
     }
   }
 
+  sendImage(url, to) {
+    this.sendMessage({
+      type: "image",
+      originalContentUrl: url,
+      previewImageUrl: `https://api.rethumb.com/v1/square/240/${url}`
+    }, to)
+  }
+
   sendTemplate({
     title, text, alt = "This is an alt text", thumbnail = defaultImage,
     actions = defaultAction
@@ -146,12 +154,13 @@ class WebHookHandler {
         if (msg.type === "message") {
           const text = msg.message.text
 
-          if (text.match(/สวัสดี|หวัดดี/g)) {
+          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi/g)) {
             initChat(id)
-          } else if (e(text.match(/บัตร|ประชา|หาย/g), 2)) {
+          } else if (e(text.match(/บัตร|ประชา/g))) {
             bot.sendText(`เอกสารที่ต้องเตรียม คือ บัตรที่สามารถใช้ยืนยันตัวตนที่หน่วยงานของรัฐออกให้ หรือสำเนาทะเบียนบ้าน`, id)
           } else if (e(text.match(/ทำ|พาสปอร์ต|Passport/g))) {
             bot.sendText(`จองคิวและดูวิธีการทำพาสปอร์ตที่ https://www.passport.in.th`, id)
+            bot.sendImage(`https://i.imgur.com/VRItpao.jpg`, id)
           } else if (e(text.match(/ได้|หมายศาล/g))) {
             bot.sendText(`เราจะช่วยคุณแน่ๆ ครับ คุณได้หมายศาลประเภทอะไรครับ`, id)
           } else {
