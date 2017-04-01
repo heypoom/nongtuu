@@ -2,6 +2,8 @@ const webpack = require("webpack")
 
 const DEBUG = true
 
+process.traceDeprecation = DEBUG
+
 module.exports = {
   entry: "./src/index.js",
 
@@ -21,10 +23,7 @@ module.exports = {
       options: {
         cacheDirectory: DEBUG,
         babelrc: false,
-        presets: [
-          ["latest", {modules: false}],
-          "stage-0",
-        ]
+        presets: ["latest", "stage-0"]
       }
     }]
   },
