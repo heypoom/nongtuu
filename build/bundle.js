@@ -559,10 +559,349 @@ exports.default = graphql(_templateObject);
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-throw new Error("Module build failed: SyntaxError: Unexpected token, expected ) (244:50)\n\n\u001b[0m \u001b[90m 242 | \u001b[39m              \u001b[32m`ต้องเรียกให้เพื่อนบ้านรื้อถอนส่วนที่รุกล้ำที่ดินแล้วทำที่ดินให้เป็นตามเดิม ผู้สร้างช่วยออกค่าใช้จ่ายได้ (ป.พ.พ. มาตรา 1312 วรรค 2)`\u001b[39m\n \u001b[90m 243 | \u001b[39m            ]\u001b[33m,\u001b[39m id)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 244 | \u001b[39m          } \u001b[36melse\u001b[39m \u001b[36mif\u001b[39m (text\u001b[33m.\u001b[39mmatch(\u001b[35m/หนี้บัตรเครดิต/\u001b[39m) {\n \u001b[90m     | \u001b[39m                                                  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 245 | \u001b[39m            bot\u001b[33m.\u001b[39msendText(\u001b[33mREPLY\u001b[39m\u001b[33m.\u001b[39mnomoney\u001b[33m,\u001b[39m id)\n \u001b[90m 246 | \u001b[39m          } \u001b[36melse\u001b[39m \u001b[36mif\u001b[39m (text\u001b[33m.\u001b[39mmatch(\u001b[35m/ตำรวจยึดรถ/\u001b[39m)) {\n \u001b[90m 247 | \u001b[39m            bot\u001b[33m.\u001b[39msendText(\u001b[33mREPLY\u001b[39m\u001b[33m.\u001b[39mpolicetookmycar\u001b[33m,\u001b[39m id)\u001b[0m\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+exports.default = debug;
+
+var _feathersMemory = __webpack_require__(17);
+
+var _feathersMemory2 = _interopRequireDefault(_feathersMemory);
+
+var _requestPromiseNative = __webpack_require__(23);
+
+var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// API "Secrets". Feel free to steal them. I don't give a single F.
+// TODO: Move that to Environment Variables, but I ain't got no time
+
+var CHANNEL_TOKEN = "UuQd6RmSRQppG/0g6xc4Xh9GVigTR0/CqBV7afFJpYbRoMp0TGP00T1UNbEZmeDgM5VMEYF+ucWkGJwHwVoQP0cGzhAeg0RCToj8c2Pk2qCZI1/wkh6tTWlOtt9uFIMwKiqj5N/3bTCjfII3HQki3QdB04t89/1O/w1cDnyilFU=";
+var TEST_USER_ID = "U33084216cc1a00f7aa27632bec769356";
+
+// SDK for interfacing with the LINE Messaging API
+// NOTE: Why the heck are the Official SDKs deprecated? Like, seriously dude? -.-
+
+var defaultAction = [{
+  type: "postback",
+  label: "หนี้บัตรเครดิต",
+  data: "action=buy&itemid=123"
+}, {
+  type: "postback",
+  label: "กฎหมายที่ดิน",
+  data: "action=add&itemid=123"
+}];
+
+var defaultImage = "https://images.unsplash.com/reserve/uvRBqDAfQfaGPJiI6lVS_R0001899.jpg?dpr=1&auto=format&fit=crop&w=1500&h=994&q=80&cs=tinysrgb&crop=";
+
+var LineMessaging = function () {
+  function LineMessaging(token) {
+    _classCallCheck(this, LineMessaging);
+
+    this.token = token;
+  }
+
+  _createClass(LineMessaging, [{
+    key: "post",
+    value: function post(endpoint, body) {
+      (0, _requestPromiseNative2.default)({
+        method: "POST",
+        uri: "https://api.line.me/v2/bot/" + endpoint,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      }).auth(null, null, true, this.token);
+    }
+  }, {
+    key: "sendMessage",
+    value: function sendMessage(message) {
+      var to = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : TEST_USER_ID;
+
+      this.post("message/push", { to: to, messages: [message] });
+    }
+  }, {
+    key: "sendText",
+    value: function sendText(message, to) {
+      if (Array.isArray(message)) {
+        this.post("message/push", {
+          to: to,
+          messages: message.map(function (text) {
+            return { type: "text", text: text };
+          })
+        });
+      } else {
+        this.sendMessage({
+          type: "text",
+          text: "" + message
+        }, to);
+      }
+    }
+  }, {
+    key: "sendImage",
+    value: function sendImage(url, to) {
+      this.sendMessage({
+        type: "image",
+        originalContentUrl: url,
+        previewImageUrl: "https://api.rethumb.com/v1/square/240/" + url
+      }, to);
+    }
+  }, {
+    key: "sendTemplate",
+    value: function sendTemplate(_ref, to) {
+      var title = _ref.title,
+          text = _ref.text,
+          _ref$alt = _ref.alt,
+          alt = _ref$alt === undefined ? "This is an alt text" : _ref$alt,
+          _ref$thumbnail = _ref.thumbnail,
+          thumbnail = _ref$thumbnail === undefined ? defaultImage : _ref$thumbnail,
+          _ref$actions = _ref.actions,
+          actions = _ref$actions === undefined ? defaultAction : _ref$actions;
+
+      this.sendMessage({
+        type: "template",
+        altText: alt,
+        template: {
+          type: "buttons",
+          thumbnailImageUrl: thumbnail,
+          title: title,
+          text: text,
+          actions: actions
+        }
+      }, to);
+    }
+  }]);
+
+  return LineMessaging;
+}();
+
+var scripts = {
+  "main": {}
+};
+
+var bot = new LineMessaging(CHANNEL_TOKEN);
+
+var ChatStage = function (_MemoryService) {
+  _inherits(ChatStage, _MemoryService);
+
+  function ChatStage() {
+    _classCallCheck(this, ChatStage);
+
+    return _possibleConstructorReturn(this, (ChatStage.__proto__ || Object.getPrototypeOf(ChatStage)).apply(this, arguments));
+  }
+
+  return ChatStage;
+}(_feathersMemory2.default);
+
+var initChat = function initChat(id) {
+  bot.sendTemplate({
+    title: "สวัสดีครับ มีอะไรให้ปรึกษาไหมครับ?",
+    text: "นี่เป็นเคสที่พบบ่อย ถ้าสงสัยนอกเหนือจากนี้ถามได้เลยนะครับ",
+    alt: "Alt Message",
+    thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
+    actions: [{
+      type: "postback",
+      label: "หนี้บัตรเครดิต",
+      data: "nomoney"
+    }, {
+      type: "postback",
+      label: "ได้หมายศาล",
+      data: "lawsuit"
+    }, {
+      type: "postback",
+      label: "โดนตำรวจยึดรถ",
+      data: "policetookmycar"
+    }, {
+      type: "postback",
+      label: "ถูกแอบถ่ายลงโซเชียล",
+      data: "paparazzis"
+    }]
+  }, id);
+};
+
+var REPLY = {
+  "nomoney": ["\u0E43\u0E08\u0E40\u0E22\u0E47\u0E19\u0E46 \u0E44\u0E1B\u0E15\u0E32\u0E21\u0E28\u0E32\u0E25\u0E19\u0E31\u0E14 \u0E04\u0E38\u0E22\u0E01\u0E31\u0E1A\u0E17\u0E19\u0E32\u0E22\u0E02\u0E2D\u0E07\u0E18\u0E19\u0E32\u0E04\u0E32\u0E23\u0E40\u0E08\u0E49\u0E32\u0E02\u0E2D\u0E07\u0E1A\u0E31\u0E15\u0E23 \u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E14\u0E39\u0E02\u0E49\u0E2D\u0E40\u0E2A\u0E19\u0E2D\u0E02\u0E2D\u0E07\u0E18\u0E19\u0E32\u0E04\u0E32\u0E23\u0E01\u0E48\u0E2D\u0E19\u0E19\u0E30", "\u0E16\u0E49\u0E32\u0E40\u0E23\u0E32\u0E44\u0E21\u0E48\u0E44\u0E2B\u0E27 \u0E25\u0E2D\u0E07\u0E15\u0E48\u0E2D\u0E23\u0E2D\u0E07\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E40\u0E25\u0E37\u0E48\u0E2D\u0E19\u0E27\u0E31\u0E19\u0E08\u0E48\u0E32\u0E22\u0E40\u0E07\u0E34\u0E19 \u0E2B\u0E25\u0E31\u0E07\u0E08\u0E32\u0E01\u0E19\u0E31\u0E49\u0E19\u0E17\u0E32\u0E07\u0E28\u0E32\u0E25\u0E08\u0E30\u0E43\u0E2B\u0E49\u0E40\u0E0B\u0E47\u0E19\u0E2A\u0E31\u0E0D\u0E0D\u0E32\u0E40\u0E25\u0E37\u0E48\u0E2D\u0E19\u0E27\u0E31\u0E19\u0E19\u0E31\u0E14\u0E04\u0E14\u0E35 \u0E41\u0E25\u0E49\u0E27\u0E01\u0E25\u0E31\u0E1A\u0E1A\u0E49\u0E32\u0E19\u0E44\u0E14\u0E49\u0E40\u0E25\u0E22!", "\u0E41\u0E15\u0E48\u0E16\u0E49\u0E32\u0E40\u0E23\u0E32\u0E44\u0E2B\u0E27 \u0E40\u0E15\u0E23\u0E35\u0E22\u0E21\u0E40\u0E2D\u0E01\u0E2A\u0E32\u0E23\u0E41\u0E2A\u0E14\u0E07\u0E23\u0E32\u0E22\u0E44\u0E14\u0E49 \u0E41\u0E25\u0E49\u0E27\u0E01\u0E47\u0E15\u0E01\u0E25\u0E07\u0E01\u0E31\u0E1A\u0E18\u0E19\u0E32\u0E04\u0E32\u0E23\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E1C\u0E48\u0E2D\u0E19\u0E0A\u0E33\u0E23\u0E30\u0E15\u0E32\u0E21\u0E23\u0E32\u0E22\u0E44\u0E14\u0E49\u0E17\u0E35\u0E48\u0E21\u0E35 \u0E41\u0E04\u0E48\u0E19\u0E31\u0E49\u0E19\u0E40\u0E2D\u0E07~", "\u0E16\u0E49\u0E32\u0E17\u0E32\u0E07\u0E18\u0E19\u0E32\u0E04\u0E32\u0E23\u0E40\u0E04\u0E49\u0E32\u0E23\u0E31\u0E1A\u0E44\u0E14\u0E49\u0E01\u0E47\u0E40\u0E2A\u0E23\u0E47\u0E08\u0E2A\u0E34\u0E49\u0E19 \u0E41\u0E15\u0E48\u0E16\u0E49\u0E32\u0E44\u0E21\u0E48\u0E01\u0E47\u0E15\u0E49\u0E2D\u0E07\u0E22\u0E2D\u0E21\u0E17\u0E33\u0E15\u0E32\u0E21\u0E04\u0E33\u0E15\u0E31\u0E14\u0E2A\u0E34\u0E19\u0E02\u0E2D\u0E07\u0E28\u0E32\u0E25\u0E25\u0E48\u0E30\u0E19\u0E30..."],
+
+  "policetookmycar": ["\u0E16\u0E49\u0E32\u0E23\u0E16\u0E40\u0E23\u0E32\u0E22\u0E31\u0E07\u0E1C\u0E48\u0E2D\u0E19\u0E44\u0E21\u0E48\u0E2B\u0E21\u0E14 \u0E01\u0E47\u0E44\u0E1B\u0E15\u0E34\u0E14\u0E15\u0E48\u0E2D\u0E44\u0E1F\u0E41\u0E19\u0E19\u0E0B\u0E4C\u0E43\u0E2B\u0E49\u0E40\u0E04\u0E49\u0E32\u0E17\u0E33\u0E40\u0E23\u0E37\u0E48\u0E2D\u0E07\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E02\u0E2D\u0E04\u0E37\u0E19", "\u0E41\u0E15\u0E48\u0E16\u0E49\u0E32\u0E40\u0E23\u0E32\u0E1C\u0E48\u0E2D\u0E19\u0E2B\u0E21\u0E14\u0E41\u0E25\u0E49\u0E27 \u0E01\u0E47\u0E44\u0E1B\u0E22\u0E37\u0E48\u0E19\u0E04\u0E33\u0E23\u0E49\u0E2D\u0E07\u0E15\u0E48\u0E2D\u0E28\u0E32\u0E25\u0E20\u0E32\u0E22\u0E43\u0E19 1 \u0E1B\u0E35 \u0E44\u0E21\u0E48\u0E2D\u0E22\u0E48\u0E32\u0E07\u0E19\u0E31\u0E49\u0E19\u0E08\u0E30\u0E02\u0E36\u0E49\u0E19\u0E27\u0E48\u0E32\u0E2A\u0E39\u0E0D\u0E2B\u0E32\u0E22\u0E19\u0E30"],
+
+  "paparazzis": "\u0E43\u0E08\u0E40\u0E22\u0E47\u0E19\u0E46 \u0E01\u0E48\u0E2D\u0E19 \u0E23\u0E35\u0E1A\u0E23\u0E27\u0E1A\u0E23\u0E27\u0E21\u0E2B\u0E25\u0E31\u0E01\u0E10\u0E32\u0E19\u0E17\u0E35\u0E48\u0E0A\u0E31\u0E14\u0E40\u0E08\u0E19 \u0E41\u0E25\u0E49\u0E27\u0E44\u0E1B\u0E40\u0E02\u0E49\u0E32\u0E41\u0E08\u0E49\u0E07\u0E04\u0E27\u0E32\u0E21\u0E01\u0E31\u0E1A\u0E15\u0E33\u0E23\u0E27\u0E08\u0E19\u0E30",
+
+  "P1": "\u0E16\u0E49\u0E32\u0E40\u0E1B\u0E47\u0E19\u0E2B\u0E21\u0E32\u0E22\u0E40\u0E23\u0E35\u0E22\u0E01\u0E41\u0E25\u0E30\u0E2A\u0E33\u0E40\u0E19\u0E32\u0E04\u0E33\u0E1F\u0E49\u0E2D\u0E07 \u0E2B\u0E23\u0E37\u0E2D \u0E2B\u0E21\u0E32\u0E22\u0E40\u0E23\u0E35\u0E22\u0E01\u0E04\u0E14\u0E35\u0E41\u0E1E\u0E48\u0E07\u0E2A\u0E32\u0E21\u0E31\u0E0D\n\u0E15\u0E48\u0E2D\u0E17\u0E33\u0E01\u0E32\u0E23\u0E04\u0E33\u0E43\u0E2B\u0E49\u0E01\u0E32\u0E23\u0E22\u0E37\u0E48\u0E19\u0E15\u0E48\u0E2D\u0E28\u0E32\u0E25\u0E20\u0E32\u0E22\u0E43\u0E01\u0E33\u0E2B\u0E19\u0E14 15 \u0E27\u0E31\u0E19 \u0E19\u0E31\u0E1A\u0E15\u0E31\u0E49\u0E07\u0E41\u0E15\u0E48\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E2B\u0E21\u0E32\u0E22",
+
+  "P2": ["\u0E2B\u0E21\u0E32\u0E22\u0E40\u0E23\u0E35\u0E22\u0E01\u0E04\u0E14\u0E35\u0E44\u0E21\u0E48\u0E21\u0E35\u0E02\u0E49\u0E2D\u0E22\u0E38\u0E48\u0E07\u0E22\u0E32\u0E01 \u0E2B\u0E23\u0E37\u0E2D \u0E2B\u0E21\u0E32\u0E22\u0E40\u0E23\u0E35\u0E22\u0E04\u0E14\u0E35\u0E21\u0E42\u0E19\u0E2A\u0E32\u0E40\u0E2B\u0E23\u0E48", "\u0E04\u0E14\u0E35\u0E21\u0E42\u0E19\u0E2A\u0E32\u0E40\u0E2B\u0E23\u0E48 \u0E04\u0E37\u0E2D \u0E04\u0E14\u0E35\u0E17\u0E35\u0E48\u0E1F\u0E49\u0E2D\u0E07\u0E23\u0E49\u0E2D\u0E07\u0E01\u0E31\u0E19\u0E42\u0E14\u0E22\u0E21\u0E35\u0E17\u0E38\u0E19\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C\u0E44\u0E21\u0E48\u0E40\u0E01\u0E34\u0E19 40,000 \u0E1A\u0E32\u0E17", "\u0E40\u0E0A\u0E48\u0E19 \u0E1F\u0E49\u0E2D\u0E07\u0E44\u0E25\u0E48\u0E2D\u0E2D\u0E01\u0E08\u0E32\u0E01\u0E2D\u0E2A\u0E31\u0E07\u0E2B\u0E32\u0E23\u0E34\u0E21\u0E17\u0E23\u0E31\u0E1E\u0E22\u0E4C \u0E17\u0E35\u0E48\u0E21\u0E35\u0E04\u0E48\u0E32\u0E40\u0E0A\u0E48\u0E32\u0E02\u0E13\u0E30\u0E22\u0E37\u0E48\u0E19\u0E1F\u0E49\u0E2D\u0E07\u0E44\u0E21\u0E48\u0E40\u0E01\u0E34\u0E19\u0E40\u0E14\u0E37\u0E2D\u0E19\u0E25\u0E48\u0E30 4,000", "\u0E08\u0E33\u0E40\u0E25\u0E22\u0E15\u0E49\u0E2D\u0E07\u0E21\u0E32\u0E28\u0E32\u0E25\u0E15\u0E32\u0E21\u0E27\u0E31\u0E19\u0E19\u0E31\u0E14\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E44\u0E01\u0E25\u0E48\u0E40\u0E01\u0E25\u0E35\u0E48\u0E22"],
+
+  "A1": ["\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E2B\u0E21\u0E32\u0E22\u0E19\u0E31\u0E14 \u0E15\u0E49\u0E2D\u0E07\u0E14\u0E39\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E27\u0E48\u0E32\u0E28\u0E32\u0E25\u0E01\u0E33\u0E2B\u0E19\u0E14\u0E27\u0E31\u0E19\u0E19\u0E31\u0E14\u0E44\u0E15\u0E48\u0E2A\u0E27\u0E19\u0E21\u0E39\u0E25\u0E1F\u0E49\u0E2D\u0E07\u0E27\u0E31\u0E19\u0E43\u0E14", "\u0E16\u0E49\u0E32\u0E08\u0E30\u0E15\u0E48\u0E2D\u0E2A\u0E39\u0E49\u0E04\u0E14\u0E35\u0E15\u0E49\u0E2D\u0E07\u0E1B\u0E23\u0E36\u0E01\u0E29\u0E32\u0E17\u0E19\u0E32\u0E22\u0E04\u0E27\u0E32\u0E21\u0E17\u0E31\u0E19\u0E17\u0E35 \u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E08\u0E30\u0E17\u0E33\u0E2B\u0E19\u0E31\u0E07\u0E2A\u0E37\u0E2D\u0E41\u0E15\u0E48\u0E07\u0E15\u0E31\u0E49\u0E07\u0E43\u0E2B\u0E49\u0E17\u0E19\u0E32\u0E22\u0E44\u0E1B\u0E17\u0E33\u0E01\u0E32\u0E23\u0E0B\u0E31\u0E01\u0E04\u0E49\u0E32\u0E19\u0E1E\u0E22\u0E32\u0E19\u0E42\u0E08\u0E17\u0E01\u0E4C\u0E43\u0E19\u0E27\u0E31\u0E19\u0E19\u0E31\u0E14\u0E44\u0E15\u0E48\u0E2A\u0E27\u0E19\u0E21\u0E39\u0E25\u0E1F\u0E49\u0E2D\u0E07\u0E41\u0E17\u0E19", "\u0E43\u0E19\u0E27\u0E31\u0E19\u0E19\u0E31\u0E14\u0E44\u0E15\u0E48\u0E2A\u0E27\u0E19\u0E21\u0E39\u0E25\u0E1F\u0E49\u0E2D\u0E07 \u0E08\u0E33\u0E40\u0E25\u0E22\u0E44\u0E21\u0E48\u0E08\u0E33\u0E40\u0E1B\u0E47\u0E19\u0E15\u0E49\u0E2D\u0E07\u0E44\u0E1B\u0E28\u0E32\u0E25\u0E01\u0E47\u0E44\u0E14\u0E49"],
+
+  "A2": ["\u0E2B\u0E21\u0E32\u0E22\u0E40\u0E23\u0E35\u0E22\u0E01\u0E1E\u0E22\u0E32\u0E19\u0E1A\u0E38\u0E04\u0E04\u0E25 \u0E40\u0E21\u0E37\u0E48\u0E2D\u0E44\u0E14\u0E49\u0E23\u0E31\u0E1A\u0E2B\u0E21\u0E32\u0E22\u0E08\u0E30\u0E15\u0E49\u0E2D\u0E07\u0E44\u0E1B\u0E28\u0E32\u0E25\u0E15\u0E32\u0E21\u0E27\u0E31\u0E19\u0E41\u0E25\u0E30\u0E40\u0E27\u0E25\u0E32\u0E17\u0E35\u0E48\u0E01\u0E33\u0E2B\u0E19\u0E14\u0E44\u0E27\u0E49\u0E43\u0E19\u0E2B\u0E21\u0E32\u0E22 \u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E40\u0E1A\u0E34\u0E01\u0E04\u0E27\u0E32\u0E21\u0E40\u0E1B\u0E47\u0E19\u0E1E\u0E22\u0E32\u0E19\u0E15\u0E48\u0E2D\u0E28\u0E32\u0E25", "\u0E2B\u0E32\u0E01\u0E02\u0E31\u0E14\u0E02\u0E37\u0E19\u0E44\u0E21\u0E48\u0E44\u0E1B\u0E28\u0E32\u0E25\u0E15\u0E32\u0E21\u0E01\u0E33\u0E2B\u0E19\u0E14 \u0E28\u0E32\u0E25\u0E2D\u0E32\u0E08\u0E2D\u0E2D\u0E01\u0E2B\u0E21\u0E32\u0E22\u0E08\u0E31\u0E1A\u0E40\u0E2D\u0E32\u0E15\u0E31\u0E27\u0E01\u0E31\u0E01\u0E02\u0E31\u0E07\u0E44\u0E14\u0E49 \u0E41\u0E25\u0E30\u0E2D\u0E32\u0E08\u0E16\u0E39\u0E01\u0E1F\u0E49\u0E2D\u0E07\u0E44\u0E14\u0E49"]
+};
+
+var gotLawsuit = function gotLawsuit(id) {
+  bot.sendTemplate({
+    title: "คุณได้หมายศาลประเภทแพ่ง หรืออาญาครับ?",
+    text: "เราจะช่วยคุณแน่ๆ ครับ แต่รบกวนตอบคำถามก่อนนะครับ",
+    actions: [{
+      type: "postback",
+      label: "ประเภทคดีแพ่ง",
+      data: "RektP"
+    }, {
+      type: "postback",
+      label: "ประเภทคดีอาญา",
+      data: "RektA"
+    }]
+  }, id);
+};
+
+var e = function e(msg) {
+  var m = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+  if (msg) {
+    if (msg.length > m) {
+      return true;
+    }
+  }
+  return false;
+};
+
+var JOKES = ["ร้อยปีที่แล้วนี่เขาเล่น April Fools Day กันแรงเนาะ", "ตะมุตะมิ", "เดี๋ยวทุ่มด้วยโพเดี้ยม", "ปั๊ดโธ่ววววววววว"];
+
+var JOKE_REPLY = {
+  "เมื่อไรจะออก": "คนไทยฝากอนาคตไว้กับผม ได้ยินทีไรน้ำตาไหลทุกที",
+  "ควย": "เดี่ยวทุมด้วยโพเดี้ยมหรอก ปัทโธ่",
+  "เจอได้นะตู่": "ถ้าเบื่อผมก็เปลี่ยนช่อง",
+  "เห็บหมา": "เอาไปขายที่ดาวอังคาร ขายได้ราคาดี",
+  "เบื่อตู่": "ไหนใครมีปัญหาอะไร ไปคุยกันที่ค่าย",
+  "ต้องการประชาธิปไตย": "ไม่ออก ใครจะออก ผมไม่ออก",
+  "คสช คือไร": "ทหารตอบได้ ถามป่าว",
+  "ตะมุตะมิ": "ผมเพื่อนเล่นคุณเหรอ ทุเรียน",
+  "ประเทศนี้ของใคร": "ของผมจบปิ้ง",
+  "สวัสดีลุง": "เอากองไว้ตรงนั้นและ ไม่ได้มีความสำคัญอะไร",
+  "นอนก่อน": "เจริญพร ชิตังเม โป้ง รวยๆ"
+};
+
+/*
+  Object.keys(o).forEach(e => {
+    if ("namelol".match(e)) {
+      console.log("WTF")
+    }
+  })
+*/
+
+var WebHookHandler = function WebHookHandler() {
+  _classCallCheck(this, WebHookHandler);
+
+  this.find = function () {
+    return Promise.resolve({ data: "OK v3" });
+  };
+
+  this.create = function () {
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    console.log("Incoming POST request:", JSON.stringify(data));
+
+    // bot.sendText(`Incoming Msg: ${JSON.stringify(data)}`)
+
+    if (data.events) {
+      data.events.forEach(function (msg) {
+        var id = msg.source.userId;
+
+        if (msg.type === "message") {
+          var text = msg.message.text;
+
+          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi/gi)) {
+            initChat(id);
+          } else if (e(text.match(/บัตร|ประชา/g))) {
+            bot.sendText("\u0E40\u0E2D\u0E01\u0E2A\u0E32\u0E23\u0E17\u0E35\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E15\u0E23\u0E35\u0E22\u0E21 \u0E04\u0E37\u0E2D \u0E1A\u0E31\u0E15\u0E23\u0E17\u0E35\u0E48\u0E2A\u0E32\u0E21\u0E32\u0E23\u0E16\u0E43\u0E0A\u0E49\u0E22\u0E37\u0E19\u0E22\u0E31\u0E19\u0E15\u0E31\u0E27\u0E15\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E19\u0E48\u0E27\u0E22\u0E07\u0E32\u0E19\u0E02\u0E2D\u0E07\u0E23\u0E31\u0E10\u0E2D\u0E2D\u0E01\u0E43\u0E2B\u0E49 \u0E2B\u0E23\u0E37\u0E2D\u0E2A\u0E33\u0E40\u0E19\u0E32\u0E17\u0E30\u0E40\u0E1A\u0E35\u0E22\u0E19\u0E1A\u0E49\u0E32\u0E19", id);
+            bot.sendImage("https://i.imgur.com/z8C0ESs.jpg", id);
+            // initChat(id)
+          } else if (e(text.match(/ทำ|พาสปอร์ต|Passport/gi))) {
+            bot.sendText("\u0E08\u0E2D\u0E07\u0E04\u0E34\u0E27\u0E41\u0E25\u0E30\u0E14\u0E39\u0E27\u0E34\u0E18\u0E35\u0E01\u0E32\u0E23\u0E17\u0E33\u0E1E\u0E32\u0E2A\u0E1B\u0E2D\u0E23\u0E4C\u0E15\u0E17\u0E35\u0E48 https://www.passport.in.th", id);
+            bot.sendImage("https://i.imgur.com/VRItpao.jpg", id);
+            // initChat(id)
+          } else if (text.match(/หมายศาล/g)) {
+            gotLawsuit(id);
+          } else if (text.match(/บ้านรุกล้ำ/g)) {
+            bot.sendText(["\u0E40\u0E08\u0E49\u0E32\u0E02\u0E2D\u0E07\u0E17\u0E35\u0E48\u0E14\u0E34\u0E19\u0E21\u0E35\u0E2A\u0E34\u0E17\u0E18\u0E34\u0E15\u0E34\u0E14\u0E15\u0E32\u0E21\u0E41\u0E25\u0E30\u0E40\u0E2D\u0E32\u0E04\u0E37\u0E19\u0E17\u0E35\u0E48\u0E14\u0E34\u0E19\u0E08\u0E32\u0E01\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E19\u0E1A\u0E49\u0E32\u0E19\u0E17\u0E35\u0E48\u0E23\u0E38\u0E01\u0E25\u0E49\u0E33\u0E40\u0E02\u0E49\u0E32\u0E21\u0E32\u0E42\u0E14\u0E22\u0E44\u0E21\u0E48\u0E21\u0E35\u0E2A\u0E34\u0E17\u0E18\u0E34 (\u0E1B.\u0E1E.\u0E1E. \u0E21\u0E32\u0E15\u0E23\u0E32 1336)", "\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E23\u0E35\u0E22\u0E01\u0E43\u0E2B\u0E49\u0E40\u0E1E\u0E37\u0E48\u0E2D\u0E19\u0E1A\u0E49\u0E32\u0E19\u0E23\u0E37\u0E49\u0E2D\u0E16\u0E2D\u0E19\u0E2A\u0E48\u0E27\u0E19\u0E17\u0E35\u0E48\u0E23\u0E38\u0E01\u0E25\u0E49\u0E33\u0E17\u0E35\u0E48\u0E14\u0E34\u0E19\u0E41\u0E25\u0E49\u0E27\u0E17\u0E33\u0E17\u0E35\u0E48\u0E14\u0E34\u0E19\u0E43\u0E2B\u0E49\u0E40\u0E1B\u0E47\u0E19\u0E15\u0E32\u0E21\u0E40\u0E14\u0E34\u0E21 \u0E1C\u0E39\u0E49\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E0A\u0E48\u0E27\u0E22\u0E2D\u0E2D\u0E01\u0E04\u0E48\u0E32\u0E43\u0E0A\u0E49\u0E08\u0E48\u0E32\u0E22\u0E44\u0E14\u0E49 (\u0E1B.\u0E1E.\u0E1E. \u0E21\u0E32\u0E15\u0E23\u0E32 1312 \u0E27\u0E23\u0E23\u0E04 2)"], id);
+          } else if (text.match(/หนี้บัตรเครดิต/g)) {
+            bot.sendText(REPLY.nomoney, id);
+          } else if (text.match(/ตำรวจยึดรถ/g)) {
+            bot.sendText(REPLY.policetookmycar, id);
+          } else if (text.match(/แอบถ่าย/g)) {
+            bot.sendText(REPLY.paparazzis, id);
+          } else if (JOKE_REPLY[text]) {
+            bot.sendText(JOKE_REPLY[text], id);
+          } else {
+            bot.sendText(JOKES[Math.floor(Math.random() * JOKES.length)], id);
+          }
+        }
+
+        if (msg.type === "postback") {
+          var choice = msg.postback.data;
+          if (REPLY[choice]) {
+            bot.sendText(REPLY[choice], id);
+          }
+
+          if (choice === "lawsuit") {
+            gotLawsuit(id);
+          }
+
+          if (choice === "RektP") {
+            bot.sendTemplate({
+              title: "รบกวนบอกประเภทของหมายศาลคดีแพ่งด้วยครับ",
+              text: "....",
+              actions: [{
+                type: "postback",
+                label: "หมายเรียกคดีแพ่งสามัญ",
+                data: "P1"
+              }, {
+                type: "postback",
+                label: "หมายเรียกคดีมโนสาเหร่",
+                data: "P2"
+              }]
+            }, id);
+          }
+
+          if (choice === "RektA") {
+            bot.sendTemplate({
+              title: "รบกวนบอกประเภทของหมายศาลคดีอาญาด้วยครับ",
+              text: "....",
+              actions: [{
+                type: "postback",
+                label: "หมายนัดไต่สวนมูลฟ้อง",
+                data: "A1"
+              }, {
+                type: "postback",
+                label: "หมายเรียกพยานบุคคล",
+                data: "A2"
+              }]
+            }, id);
+          }
+        }
+      });
+    }
+
+    return Promise.resolve({ data: "200" });
+  };
+};
+
+function debug() {
+  this.use("linehook", new WebHookHandler(), function (req, res, next) {
+    res.status(200);
+    next();
+  });
+}
 
 /***/ }),
 /* 12 */
@@ -595,7 +934,12 @@ module.exports = require("feathers-errors/handler");
 module.exports = require("feathers-hooks");
 
 /***/ }),
-/* 17 */,
+/* 17 */
+/***/ (function(module, exports) {
+
+module.exports = require("feathers-memory");
+
+/***/ }),
 /* 18 */
 /***/ (function(module, exports) {
 
@@ -624,6 +968,12 @@ module.exports = require("graphql-server-express");
 /***/ (function(module, exports) {
 
 module.exports = require("graphql-tools");
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+module.exports = require("request-promise-native");
 
 /***/ })
 /******/ ]);
