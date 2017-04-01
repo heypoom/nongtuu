@@ -158,11 +158,36 @@ class WebHookHandler {
             initChat(id)
           } else if (e(text.match(/บัตร|ประชา/g))) {
             bot.sendText(`เอกสารที่ต้องเตรียม คือ บัตรที่สามารถใช้ยืนยันตัวตนที่หน่วยงานของรัฐออกให้ หรือสำเนาทะเบียนบ้าน`, id)
+            bot.sendImage(`https://i.imgur.com/z8C0ESs.jpg`, id)
+            initChat(id)
           } else if (e(text.match(/ทำ|พาสปอร์ต|Passport/g))) {
             bot.sendText(`จองคิวและดูวิธีการทำพาสปอร์ตที่ https://www.passport.in.th`, id)
             bot.sendImage(`https://i.imgur.com/VRItpao.jpg`, id)
+            initChat(id)
           } else if (e(text.match(/ได้|หมายศาล/g))) {
-            bot.sendText(`เราจะช่วยคุณแน่ๆ ครับ คุณได้หมายศาลประเภทอะไรครับ`, id)
+            bot.sendText(` `, id)
+
+            bot.sendTemplate({
+              title: "คุณได้หมายศาลประเภทอะไรครับ?",
+              text: "เราจะช่วยคุณแน่ๆ ครับ แต่รบกวนตอบคำถามก่อนนะครับ",
+              actions: [{
+                type: "postback",
+                label: "ประเภท 1",
+                data: "1"
+              }, {
+                type: "postback",
+                label: "ประเภท 2",
+                data: "2"
+              }, {
+                type: "postback",
+                label: "ประเภท 3",
+                data: "3"
+              }, {
+                type: "postback",
+                label: "ประเภท 4",
+                data: "4"
+              }]
+            }, id)
           } else {
             bot.sendText(JOKES[Math.floor(Math.random() * JOKES.length)], id)
           }
@@ -180,8 +205,6 @@ class WebHookHandler {
           if (msg.postback.data === "paparazzis") {
             bot.sendText(C3, id)
           }
-
-          initChat(id)
         }
       })
     }
