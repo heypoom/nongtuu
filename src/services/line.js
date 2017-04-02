@@ -254,6 +254,11 @@ class WebHookHandler {
           }
         }
 
+        if (msg.type === "follow") {
+          // User added you as a friend
+          initChat(id)
+        }
+
         if (msg.type === "postback") {
           const choice = msg.postback.data
           if (REPLY[choice]) {

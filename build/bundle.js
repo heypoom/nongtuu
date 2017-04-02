@@ -847,6 +847,11 @@ var WebHookHandler = function WebHookHandler() {
           }
         }
 
+        if (msg.type === "follow") {
+          // User added you as a friend
+          initChat(id);
+        }
+
         if (msg.type === "postback") {
           var choice = msg.postback.data;
           if (REPLY[choice]) {
