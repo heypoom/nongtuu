@@ -249,6 +249,8 @@ class WebHookHandler {
             bot.sendText(`ขอบคุณมากครับ ปีหน้าให้ผมเป็นนายกต่อด้วยนะ 😉`, id)
           } else if (text.match(/Never Gonna Give You Up/gi)) {
             bot.sendText(`Never Gonna Let You Down~! 😉`, id)
+          } else if (text.match(/แบบฟอร์มศาล/)) {
+            bot.sendText(`ดาวน์โหลดแบบฟอร์มศาลได้ที่ http://www.chawbanlaw.com/form_download.html นะครับ~! 😉`, id)
           } else if (JOKE_REPLY[text]) {
             bot.sendText(JOKE_REPLY[text], id)
           } else if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi|Yo/gi)) {
