@@ -214,7 +214,7 @@ const suggestLawyer = id => {
     bot.sendTemplate({
       title: "คุณต้องการรับคำปรึกษาจากทนายฟรีไหมครับ 😊",
       text: "คดีของคุณต้องใช้ทนายความ และเราจะช่วยคุณให้ถึงที่สุดครับ 😊",
-      thumbnail: "https://i.imgur.com/s4c7YSH.jpg",
+      thumbnail: "https://i.imgur.com/ZSifg3o.jpg",
       actions: [{
         type: "postback",
         label: "หาทนายให้หน่อยสิ 👍",
