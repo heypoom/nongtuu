@@ -803,7 +803,7 @@ var WebHookHandler = function WebHookHandler() {
   _classCallCheck(this, WebHookHandler);
 
   this.find = function () {
-    return Promise.resolve({ data: "OK v3" });
+    return Promise.resolve({ data: "OK v4" });
   };
 
   this.create = function () {
@@ -820,7 +820,7 @@ var WebHookHandler = function WebHookHandler() {
         if (msg.type === "message") {
           var text = msg.message.text;
 
-          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi/gi)) {
+          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi|Yo/gi)) {
             initChat(id);
           } else if (e(text.match(/บัตร|ประชา/g))) {
             bot.sendText("\u0E40\u0E2D\u0E01\u0E2A\u0E32\u0E23\u0E17\u0E35\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E40\u0E15\u0E23\u0E35\u0E22\u0E21 \u0E04\u0E37\u0E2D \u0E1A\u0E31\u0E15\u0E23\u0E17\u0E35\u0E48\u0E2A\u0E32\u0E21\u0E32\u0E23\u0E16\u0E43\u0E0A\u0E49\u0E22\u0E37\u0E19\u0E22\u0E31\u0E19\u0E15\u0E31\u0E27\u0E15\u0E19\u0E17\u0E35\u0E48\u0E2B\u0E19\u0E48\u0E27\u0E22\u0E07\u0E32\u0E19\u0E02\u0E2D\u0E07\u0E23\u0E31\u0E10\u0E2D\u0E2D\u0E01\u0E43\u0E2B\u0E49 \u0E2B\u0E23\u0E37\u0E2D\u0E2A\u0E33\u0E40\u0E19\u0E32\u0E17\u0E30\u0E40\u0E1A\u0E35\u0E22\u0E19\u0E1A\u0E49\u0E32\u0E19 \uD83D\uDE04", id);
@@ -840,8 +840,10 @@ var WebHookHandler = function WebHookHandler() {
             bot.sendText(REPLY.policetookmycar, id);
           } else if (text.match(/แอบถ่าย/g)) {
             bot.sendText(REPLY.paparazzis, id);
-          } else if (text.match(/ขอบคุณ/g)) {
+          } else if (text.match(/ขอบคุณ|thank/gi)) {
             bot.sendText("\u0E02\u0E2D\u0E1A\u0E04\u0E38\u0E13\u0E21\u0E32\u0E01\u0E04\u0E23\u0E31\u0E1A \u0E1B\u0E35\u0E2B\u0E19\u0E49\u0E32\u0E43\u0E2B\u0E49\u0E1C\u0E21\u0E40\u0E1B\u0E47\u0E19\u0E19\u0E32\u0E22\u0E01\u0E15\u0E48\u0E2D\u0E14\u0E49\u0E27\u0E22\u0E19\u0E30 \uD83D\uDE09", id);
+          } else if (text.match(/Never Gonna Give You Up/gi)) {
+            bot.sendText("Never Gonna Let You Down~! \uD83D\uDE09", id);
           } else if (JOKE_REPLY[text]) {
             bot.sendText(JOKE_REPLY[text], id);
           } else {
@@ -856,6 +858,7 @@ var WebHookHandler = function WebHookHandler() {
 
         if (msg.type === "postback") {
           var choice = msg.postback.data;
+
           if (REPLY[choice]) {
             bot.sendText(REPLY[choice], id);
           }

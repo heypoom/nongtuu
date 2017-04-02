@@ -210,7 +210,7 @@ const JOKE_REPLY = {
 */
 
 class WebHookHandler {
-  find = () => Promise.resolve({data: "OK v3"})
+  find = () => Promise.resolve({data: "OK v4"})
 
   create = (data = {}) => {
     console.log("Incoming POST request:", JSON.stringify(data))
@@ -224,7 +224,7 @@ class WebHookHandler {
         if (msg.type === "message") {
           const text = msg.message.text
 
-          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi/gi)) {
+          if (text.match(/สวัสดี|หวัดดี|Hello|Hey|Hi|Yo/gi)) {
             initChat(id)
           } else if (e(text.match(/บัตร|ประชา/g))) {
             bot.sendText(`เอกสารที่ต้องเตรียม คือ บัตรที่สามารถใช้ยืนยันตัวตนที่หน่วยงานของรัฐออกให้ หรือสำเนาทะเบียนบ้าน 😄`, id)
@@ -247,8 +247,10 @@ class WebHookHandler {
             bot.sendText(REPLY.policetookmycar, id)
           } else if (text.match(/แอบถ่าย/g)) {
             bot.sendText(REPLY.paparazzis, id)
-          } else if (text.match(/ขอบคุณ/g)) {
+          } else if (text.match(/ขอบคุณ|thank/gi)) {
             bot.sendText(`ขอบคุณมากครับ ปีหน้าให้ผมเป็นนายกต่อด้วยนะ 😉`, id)
+          } else if (text.match(/Never Gonna Give You Up/gi)) {
+            bot.sendText(`Never Gonna Let You Down~! 😉`, id)
           } else if (JOKE_REPLY[text]) {
             bot.sendText(JOKE_REPLY[text], id)
           } else {
@@ -263,6 +265,7 @@ class WebHookHandler {
 
         if (msg.type === "postback") {
           const choice = msg.postback.data
+
           if (REPLY[choice]) {
             bot.sendText(REPLY[choice], id)
           }
